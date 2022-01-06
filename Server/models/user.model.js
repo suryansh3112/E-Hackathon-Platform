@@ -28,6 +28,8 @@ module.exports = (sequelize, DataTypes) => {
 
   User.associate = (models) => {
     User.hasOne(models.Profile);
+    User.belongsToMany(models.Team, { through: 'Teammate' });
+    User.hasMany(models.Team, { foreignKey: 'leaderId' });
   };
 
   return User;

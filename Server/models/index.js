@@ -2,12 +2,14 @@ const { Sequelize, DataTypes } = require('sequelize');
 
 const sequelize = new Sequelize('E-Hack', 'postgres', 'Suryansh@2000', {
   host: 'localhost',
-  dialect: 'postgres'
+  dialect: 'postgres',
+  logging: false
 });
 
 const models = {
   User: require('./user.model')(sequelize, DataTypes),
-  Profile: require('./profile.model')(sequelize, DataTypes)
+  Profile: require('./profile.model')(sequelize, DataTypes),
+  Team: require('./team.model')(sequelize, DataTypes)
 };
 
 Object.keys(models).forEach((modelName) => {
