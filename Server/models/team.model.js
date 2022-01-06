@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   Team.associate = (models) => {
-    Team.belongsToMany(models.User, { through: 'Teammate', as: 'member' });
+    Team.belongsToMany(models.User, { through: 'Teammate', as: 'members' });
     Team.belongsTo(models.User, { foreignKey: 'leaderId', as: 'leader' });
   };
 

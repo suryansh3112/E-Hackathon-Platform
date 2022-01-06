@@ -11,4 +11,7 @@ router.get('/:teamName', auth, teamControllers.getTeam);
 //Updates a TeamInfo
 router.put('/:teamName', auth, teamControllers.updateTeam);
 
+//Delete a Team
+router.delete('/:teamName', auth, teamControllers.deleteTeam);
+
 module.exports = router;

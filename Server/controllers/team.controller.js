@@ -7,7 +7,7 @@ const createTeam = async (req, res) => {
     const { name, members } = req.body;
     const newTeam = await Team.create({ name, leaderId: req.user });
     const allMembers = [...members, req.user];
-    await newTeam.addMember(allMembers);
+    await newTeam.addMembers(allMembers);
 
     res.status(200).json({ message: 'Successfully Created Team.' });
   } catch (error) {
@@ -27,7 +27,7 @@ const getTeam = async (req, res) => {
         },
         {
           model: models.User,
-          as: 'member',
+          as: 'members',
           attributes: ['id', 'userName']
         }
       ]
@@ -59,11 +59,35 @@ const updateTeam = async (req, res) => {
       await team.update({ name });
     }
     if (members && members.length > 0) {
-      await team.setMember([...members, req.user]);
+      await team.setMembers([...members, req.user]);
     }
 
     res.status(200).json({
-      message: 'Updated Successfully'
+      message: 'Updated Team Successfully'
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const deleteTeam = async (req, res) => {
+  try {
+    const team = await Team.findOne({
+      where: { name: req.params.teamName }
+    });
+    if (team.leaderId !== req.user) {
+      res.status(400).json({
+        message: 'Only Leader can delete Team'
+      });
+      return;
+    }
+
+    await Team.destroy({
+      where: { name: req.params.teamName }
+    });
+
+    res.status(200).json({
+      message: 'Deleted Team Successfully'
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -73,3 +97,4 @@ const updateTeam = async (req, res) => {
 exports.createTeam = createTeam;
 exports.getTeam = getTeam;
 exports.updateTeam = updateTeam;
+exports.deleteTeam = deleteTeam;
