@@ -1,6 +1,7 @@
 const models = require('../models');
 const User = models.User;
 const Team = models.Team;
+const Channel = models.Channel;
 
 const createTeam = async (req, res) => {
   try {
@@ -8,6 +9,9 @@ const createTeam = async (req, res) => {
     const newTeam = await Team.create({ name, leaderId: req.user });
     const allMembers = [...members, req.user];
     await newTeam.addMembers(allMembers);
+    const teamChannel = await Channel.create({ name, teamId: newTeam.id });
+    await teamChannel.addParticipants(allMembers);
+    await teamChannel.addAdmins(req.user);
 
     res.status(200).json({ message: 'Successfully Created Team.' });
   } catch (error) {
@@ -18,7 +22,7 @@ const createTeam = async (req, res) => {
 const getTeam = async (req, res) => {
   try {
     const team = await Team.findOne({
-      where: { name: req.params.teamName },
+      where: { id: req.params.teamId },
       include: [
         {
           model: models.User,
@@ -46,8 +50,9 @@ const updateTeam = async (req, res) => {
   try {
     const { name, members } = req.body;
     const team = await Team.findOne({
-      where: { name: req.params.teamName }
+      where: { id: req.params.teamId }
     });
+    const teamChannel = await team.getChannel();
 
     if (team.leaderId !== req.user) {
       res.status(400).json({
@@ -57,9 +62,11 @@ const updateTeam = async (req, res) => {
 
     if (name) {
       await team.update({ name });
+      await teamChannel.update({ name });
     }
     if (members && members.length > 0) {
       await team.setMembers([...members, req.user]);
+      await teamChannel.setParticipants([...members, req.user]);
     }
 
     res.status(200).json({
@@ -73,8 +80,10 @@ const updateTeam = async (req, res) => {
 const deleteTeam = async (req, res) => {
   try {
     const team = await Team.findOne({
-      where: { name: req.params.teamName }
+      where: { id: req.params.teamId }
     });
+    // const teamChannel = await team.getChannel();
+
     if (team.leaderId !== req.user) {
       res.status(400).json({
         message: 'Only Leader can delete Team'
@@ -83,8 +92,11 @@ const deleteTeam = async (req, res) => {
     }
 
     await Team.destroy({
-      where: { name: req.params.teamName }
+      where: { id: req.params.teamId }
     });
+    // await Channel.destroy({
+    //   where: { id: teamChannel.id }
+    // });
 
     res.status(200).json({
       message: 'Deleted Team Successfully'

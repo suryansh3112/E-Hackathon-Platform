@@ -6,12 +6,12 @@ const auth = require('../middleware/auth');
 router.post('/create', auth, teamControllers.createTeam);
 
 //Gets a TeamInfo
-router.get('/:teamName', auth, teamControllers.getTeam);
+router.get('/:teamId', auth, teamControllers.getTeam);
 
 //Updates a TeamInfo
-router.put('/:teamName', auth, teamControllers.updateTeam);
+router.put('/:teamId', auth, teamControllers.updateTeam);
 
 //Delete a Team
-router.delete('/:teamName', auth, teamControllers.deleteTeam);
+router.delete('/:teamId', auth, teamControllers.deleteTeam);
 
 module.exports = router;

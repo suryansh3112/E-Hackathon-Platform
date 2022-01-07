@@ -15,7 +15,7 @@ app.use('', userRoute);
 const teamRoute = require('./routes/team.route');
 app.use('/team', teamRoute);
 
-models.sequelize.sync().then(() => {
+models.sequelize.sync({ alter: true }).then(() => {
   app.listen(PORT, async () => {
     console.log(`The Server has started on port ${PORT}.`);
   });

@@ -9,7 +9,9 @@ const sequelize = new Sequelize('E-Hack', 'postgres', 'Suryansh@2000', {
 const models = {
   User: require('./user.model')(sequelize, DataTypes),
   Profile: require('./profile.model')(sequelize, DataTypes),
-  Team: require('./team.model')(sequelize, DataTypes)
+  Team: require('./team.model')(sequelize, DataTypes),
+  Channel: require('./channel.model')(sequelize, DataTypes),
+  Message: require('./message.model')(sequelize, DataTypes)
 };
 
 Object.keys(models).forEach((modelName) => {

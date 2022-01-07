@@ -10,4 +10,7 @@ router.post('/login', userControllers.login);
 
 router.post('/tokenIsValid', userControllers.tokenIsValid);
 
+//Gets user channels
+router.get('/channels', auth, userControllers.getUserChannel);
+
 module.exports = router;

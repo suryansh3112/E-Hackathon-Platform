@@ -1,5 +1,6 @@
 const models = require('../models');
 const User = models.User;
+const Channel = models.Channel;
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
@@ -132,7 +133,21 @@ const tokenIsValid = async (req, res) => {
   }
 };
 
+const getUserChannel = async (req, res) => {
+  try {
+    const user = await User.findByPk(req.user);
+    const channel = await user.getChannels();
+    res.status(200).json({
+      message: 'Channels Info',
+      data: channel
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 //------------------------------------------------EXPORTS-----------------------------------------------------------
 exports.register = register;
 exports.login = login;
 exports.tokenIsValid = tokenIsValid;
+exports.getUserChannel = getUserChannel;
