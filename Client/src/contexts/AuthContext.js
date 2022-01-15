@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext, createContext } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Constants from "../common/Constants";
 
 const AuthContext = createContext({});
 
@@ -19,7 +20,7 @@ export function AuthProvider({ children }) {
 
   const login = async (loginInfo) => {
     try {
-      const res = await axios.post("http://localhost:8080/login", loginInfo);
+      const res = await axios.post(`${Constants.server_url}/login`, loginInfo);
       setUserData({
         token: res.data.token,
         user: res.data.user,
@@ -38,7 +39,7 @@ export function AuthProvider({ children }) {
 
   const register = async (userInfo) => {
     try {
-      await axios.post("http://localhost:8080/register", userInfo);
+      await axios.post(`${Constants.server_url}/register`, userInfo);
       alert("Registered Successfully.");
       navigate("/login");
     } catch (error) {
@@ -61,7 +62,7 @@ export function AuthProvider({ children }) {
     const checkLoggedIn = async () => {
       let token = localStorage.getItem("auth-token");
       const tokenRes = await axios.post(
-        `http://localhost:8080/tokenIsValid`,
+        `${Constants.server_url}/tokenIsValid`,
         null,
         { headers: { "x-auth-token": token } }
       );
