@@ -1,45 +1,51 @@
-import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
+import * as React from "react";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import Menu from "@mui/material/Menu";
 // import MenuIcon from '@mui/icons-material/Menu';
-import { Link } from 'react-router-dom';
-import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
-
-const pages = [
-  { name: 'Login', route: '/login' },
-  { name: 'Register', route: '/register' }
+import { Link } from "react-router-dom";
+import Container from "@mui/material/Container";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import Tooltip from "@mui/material/Tooltip";
+import MenuItem from "@mui/material/MenuItem";
+import { useAuth } from "../contexts/AuthContext";
+const loggedOutPages = [
+  { name: "Login", route: "/login" },
+  { name: "Register", route: "/register" },
 ];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const loggedInPages = [{ name: "Profile", route: "/profile" }];
 
 const Navbar = () => {
+  const { userData, logout } = useAuth();
+
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [pages, setPages] = React.useState([]);
+
+  React.useEffect(() => {
+    setPages(userData.isLoggedIn ? loggedInPages : loggedOutPages);
+  }, [userData]);
 
   const handleOpenNavMenu = (event) => {
-    console.log('dd', event.currentTarget);
     setAnchorElNav(event.currentTarget);
   };
   const handleOpenUserMenu = (event) => {
-    console.log('user ', event.currentTarget);
     setAnchorElUser(event.currentTarget);
   };
 
   const handleCloseNavMenu = (route) => {
-    console.log(route);
+    setAnchorElNav(null);
+  };
+  const logoutUser = () => {
+    logout();
     setAnchorElNav(null);
   };
 
   const handleCloseUserMenu = () => {
-    console.log('bye');
-
     setAnchorElUser(null);
   };
 
@@ -51,16 +57,16 @@ const Navbar = () => {
             variant="h6"
             noWrap
             component="div"
-            sx={{ flexGrow: { xs: 1, md: 0 } }}
+            sx={{ flexGrow: { xs: 1, md: 0 }, mr: 3 }}
           >
-            LOGO
+            E-Hack
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
               <Button
                 key={page.name}
                 onClick={() => handleCloseNavMenu(page.route)}
-                sx={{ my: 2, color: 'white', display: 'block' }}
+                sx={{ my: 2, color: "white", display: "block" }}
                 component={Link}
                 to={page.route}
               >
@@ -76,17 +82,17 @@ const Navbar = () => {
               </IconButton>
             </Tooltip>
             <Menu
-              sx={{ mt: '45px' }}
+              sx={{ mt: "45px" }}
               id="menu-appbar"
               anchorEl={anchorElUser}
               anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right'
+                vertical: "top",
+                horizontal: "right",
               }}
               keepMounted
               transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right'
+                vertical: "top",
+                horizontal: "right",
               }}
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
@@ -101,6 +107,11 @@ const Navbar = () => {
                   <Typography textAlign="center">{page.name}</Typography>
                 </MenuItem>
               ))}
+              {userData.isLoggedIn && (
+                <MenuItem onClick={logoutUser}>
+                  <Typography textAlign="center">Logout</Typography>
+                </MenuItem>
+              )}
             </Menu>
           </Box>
         </Toolbar>

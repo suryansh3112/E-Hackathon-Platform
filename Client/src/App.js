@@ -1,28 +1,35 @@
-import React from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import { useAuth } from './contexts/AuthContext';
-import { Register, Login } from './pages';
-import { Navbar } from './components';
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import { useAuth } from "./contexts/AuthContext";
+import { Register, Login } from "./pages";
+import { Navbar } from "./components";
 
 export default function App() {
   const { userData } = useAuth();
+
+  const AuthenticatedRoutes = () => {
+    return (
+      <Routes>
+        <Route path="/" element={<h1>Welcome {userData.user.userName} </h1>} />
+      </Routes>
+    );
+  };
+  const UnAuthenticatedRoutes = () => {
+    return (
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+      </Routes>
+    );
+  };
   return (
     <>
-      <Router>
-        <Navbar />
-        <Switch>
-          {userData.isLoggedIn ? (
-            <>
-              <h1>{userData?.user?.userName} dd</h1>
-            </>
-          ) : (
-            <>
-              <Route path="/login" component={Login} />
-              <Route path="/register" component={Register} />
-            </>
-          )}
-        </Switch>
-      </Router>
+      <Navbar />
+      {userData.isLoggedIn ? (
+        <AuthenticatedRoutes />
+      ) : (
+        <UnAuthenticatedRoutes />
+      )}
     </>
   );
 }

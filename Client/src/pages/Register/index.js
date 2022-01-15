@@ -3,7 +3,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { useAuth } from '../../contexts/AuthContext';
 import { makeStyles } from '@mui/styles';
-import { useHistory } from 'react-router-dom';
+// import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles({
   root: {
@@ -19,7 +19,7 @@ const useStyles = makeStyles({
 
 export default function Register() {
   const classes = useStyles();
-  const history = useHistory();
+  // const history = useHistory();
 
   const { register } = useAuth();
   const [user, setUser] = useState({
@@ -36,7 +36,8 @@ export default function Register() {
   };
 
   const handleRegister = () => {
-    register(user, () => history.push('/login'));
+    // register(user, () => history.push('/login'));
+    register(user);
   };
 
   return (

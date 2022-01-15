@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useContext, createContext } from 'react';
-import axios from 'axios';
-import { useHistory } from 'react-router-dom';
+import React, { useState, useEffect, useContext, createContext } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext({});
 
@@ -9,43 +9,41 @@ export function useAuth() {
 }
 
 export function AuthProvider({ children }) {
-  const history = useHistory();
-  console.log(history);
+  const navigate = useNavigate();
 
   const [userData, setUserData] = useState({
     token: undefined,
     user: undefined,
-    isLoggedIn: false
+    isLoggedIn: false,
   });
 
   const login = async (loginInfo) => {
-    console.log('login', loginInfo);
     try {
-      const res = await axios.post('http://localhost:5000/login', loginInfo);
+      const res = await axios.post("http://localhost:8080/login", loginInfo);
       setUserData({
         token: res.data.token,
         user: res.data.user,
-        isLoggedIn: true
+        isLoggedIn: true,
       });
 
-      localStorage.setItem('auth-token', res.data.token);
+      localStorage.setItem("auth-token", res.data.token);
 
-      alert('Login Successfull.');
+      alert("Login Successfull.");
+      navigate("/");
     } catch (error) {
-      alert('Something went wrong,Please try again.');
-      console.log('error', error);
+      alert("Something went wrong,Please try again.");
+      console.log("error", error);
     }
   };
 
-  const register = async (userInfo, callback) => {
-    console.log('register', userInfo);
+  const register = async (userInfo) => {
     try {
-      await axios.post('http://localhost:5000/register', userInfo);
-      alert('Registered Successfully.');
-      callback();
+      await axios.post("http://localhost:8080/register", userInfo);
+      alert("Registered Successfully.");
+      navigate("/login");
     } catch (error) {
-      alert('Something went wrong,Please try again.');
-      console.log('error', error);
+      alert("Something went wrong,Please try again.");
+      console.log("error", error.message);
     }
   };
 
@@ -53,25 +51,25 @@ export function AuthProvider({ children }) {
     setUserData({
       token: undefined,
       user: undefined,
-      isLoggedIn: false
+      isLoggedIn: false,
     });
-    localStorage.setItem('auth-token', '');
+    localStorage.setItem("auth-token", "");
+    navigate("/login");
   };
 
   useEffect(() => {
     const checkLoggedIn = async () => {
-      let token = localStorage.getItem('auth-token');
-      console.log('token', token);
+      let token = localStorage.getItem("auth-token");
       const tokenRes = await axios.post(
-        `http://localhost:5000/tokenIsValid`,
+        `http://localhost:8080/tokenIsValid`,
         null,
-        { headers: { 'x-auth-token': token } }
+        { headers: { "x-auth-token": token } }
       );
       if (tokenRes?.data?.status) {
         setUserData({
           token,
           user: tokenRes?.data?.user,
-          isLoggedIn: true
+          isLoggedIn: true,
         });
       }
     };
