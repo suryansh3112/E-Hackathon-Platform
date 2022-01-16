@@ -1,26 +1,27 @@
-import React, { useState } from 'react';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import { useAuth } from '../../contexts/AuthContext';
-import { makeStyles } from '@mui/styles';
+import React, { useState } from "react";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import { useAuth } from "../../contexts/AuthContext";
+import { makeStyles } from "@mui/styles";
 
 const useStyles = makeStyles({
   root: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center'
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
   },
   btn: {
-    marginTop: 20
-  }
+    marginTop: 20,
+  },
 });
 export default function Login() {
+  console.log("Login");
   const classes = useStyles();
   const { login } = useAuth();
   const [user, setUser] = useState({
-    emailOrUsername: '',
-    password: ''
+    emailOrUsername: "",
+    password: "",
   });
 
   const handleChange = (event) => {

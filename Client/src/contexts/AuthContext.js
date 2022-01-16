@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext, createContext } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useSnackbar } from "./SnackbarContext";
 import Constants from "../common/Constants";
 
 const AuthContext = createContext({});
@@ -11,6 +12,7 @@ export function useAuth() {
 
 export function AuthProvider({ children }) {
   const navigate = useNavigate();
+  const { showSnackbar } = useSnackbar();
 
   const [userData, setUserData] = useState({
     token: undefined,
@@ -29,22 +31,24 @@ export function AuthProvider({ children }) {
 
       localStorage.setItem("auth-token", res.data.token);
 
-      alert("Login Successfull.");
+      showSnackbar(Constants.strings.loginSuccessfull);
       navigate("/");
     } catch (error) {
-      alert("Something went wrong,Please try again.");
-      console.log("error", error);
+      const message =
+        error?.response?.data?.message || Constants.strings.somethingWentWrong;
+      showSnackbar(message, "error");
     }
   };
 
   const register = async (userInfo) => {
     try {
       await axios.post(`${Constants.server_url}/register`, userInfo);
-      alert("Registered Successfully.");
+      showSnackbar(Constants.strings.registerSuccessfull);
       navigate("/login");
     } catch (error) {
-      alert("Something went wrong,Please try again.");
-      console.log("error", error.message);
+      const message =
+        error?.response?.data?.message || Constants.strings.somethingWentWrong;
+      showSnackbar(message, "error");
     }
   };
 
@@ -55,6 +59,7 @@ export function AuthProvider({ children }) {
       isLoggedIn: false,
     });
     localStorage.setItem("auth-token", "");
+    showSnackbar(Constants.strings.loggedOut);
     navigate("/login");
   };
 
