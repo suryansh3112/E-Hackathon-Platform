@@ -3,11 +3,18 @@ const User = models.User;
 const Team = models.Team;
 const Channel = models.Channel;
 
+const profileNotCompleted = async (userId) => {
+  const user = await User.findByPk(userId);
+  return !user.profileCompleted;
+};
+
 const createTeam = async (req, res) => {
   try {
     const { name } = req.body;
+    if (await profileNotCompleted(req.user)) {
+      return res.status(400).json({ message: "Please complete your profile" });
+    }
     const newTeam = await Team.create({ name, leaderId: req.user });
-    // const allMembers = [...members, req.user];
     await newTeam.addMembers(req.user);
     const teamChannel = await Channel.create({ name, teamId: newTeam.id });
     await teamChannel.addParticipants(req.user);
@@ -21,16 +28,21 @@ const createTeam = async (req, res) => {
 
 const joinTeam = async (req, res) => {
   try {
+    if (await profileNotCompleted(req.user)) {
+      return res.status(400).json({ message: "Please complete your profile" });
+    }
     const team = await Team.findOne({
       where: { teamCode: req.params.teamCode },
     });
+    if (!team) {
+      return res.status(400).json({ message: "No team found" });
+    }
     const teamChannel = await team.getChannel();
-
     await team.addMembers(req.user);
     await teamChannel.addParticipants(req.user);
 
     res.status(200).json({
-      message: "Updated Team Successfully",
+      message: "Joined Team Successfully",
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -41,18 +53,15 @@ const getTeam = async (req, res) => {
   try {
     const team = await Team.findOne({
       where: { id: req.params.teamId },
-      include: [
-        {
-          model: models.User,
-          as: "leader",
-          attributes: ["id", "userName"],
+      include: {
+        model: models.User,
+        as: "members",
+        attributes: ["id", "userName"],
+        include: {
+          model: models.Profile,
+          as: "profile",
         },
-        {
-          model: models.User,
-          as: "members",
-          attributes: ["id", "userName"],
-        },
-      ],
+      },
     });
 
     res.status(200).json({

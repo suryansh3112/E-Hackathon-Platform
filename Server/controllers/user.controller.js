@@ -119,6 +119,12 @@ const updateProfile = async (req, res) => {
     } else {
       await profile.update(data);
     }
+    profile = profile.dataValues;
+    if (profile.firstName && profile.lastName) {
+      await user.update({ profileCompleted: true });
+    } else {
+      await user.update({ profileCompleted: false });
+    }
 
     res.status(200).json({
       message: "Updated Profile Successfully",
@@ -182,6 +188,19 @@ const getUserChannel = async (req, res) => {
   }
 };
 
+const getUserTeams = async (req, res) => {
+  try {
+    const user = await User.findByPk(req.user);
+    const teams = await user.getAllTeams();
+    res.status(200).json({
+      message: "Channels Info",
+      data: teams,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 //------------------------------------------------EXPORTS-----------------------------------------------------------
 exports.register = register;
 exports.login = login;
@@ -189,3 +208,4 @@ exports.tokenIsValid = tokenIsValid;
 exports.getUserChannel = getUserChannel;
 exports.updateProfile = updateProfile;
 exports.getProfile = getProfile;
+exports.getUserTeams = getUserTeams;

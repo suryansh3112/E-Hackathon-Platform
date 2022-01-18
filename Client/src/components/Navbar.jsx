@@ -17,7 +17,10 @@ const loggedOutPages = [
   { name: "Login", route: "/login" },
   { name: "Register", route: "/register" },
 ];
-const loggedInPages = [{ name: "Profile", route: "/profile" }];
+const loggedInPages = [
+  { name: "Profile", route: "/profile" },
+  { name: "Teams", route: "/teams" },
+];
 
 const Navbar = () => {
   const { userData, logout } = useAuth();

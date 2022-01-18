@@ -1,48 +1,48 @@
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
-    'user',
+    "user",
     {
       id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
-        primaryKey: true
+        primaryKey: true,
       },
       userName: {
         type: DataTypes.STRING,
         unique: true,
-        allowNull: false
+        allowNull: false,
       },
       email: {
         type: DataTypes.STRING,
         unique: true,
-        allowNull: false
+        allowNull: false,
       },
       password: {
         type: DataTypes.STRING,
-        allowNull: false
-      },
-      role: {
-        type: DataTypes.STRING,
         allowNull: false,
-        defaultValue: 'user'
-      }
+      },
+      profileCompleted: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+      },
     },
     {
-      timestamps: false
+      timestamps: false,
     }
   );
 
   User.associate = (models) => {
     User.hasOne(models.Profile);
-    User.belongsToMany(models.Team, { through: 'Teammate' });
-    User.hasMany(models.Team, { foreignKey: 'leaderId' });
+    User.belongsToMany(models.Team, { through: "Teammate", as: "allTeams" });
+    User.hasMany(models.Team, { foreignKey: "leaderId", as: "createdTeams" });
     User.belongsToMany(models.Channel, {
-      through: 'User_Channel',
-      as: 'channels'
+      through: "User_Channel",
+      as: "channels",
     });
     User.belongsToMany(models.Channel, {
-      through: 'Channel_Admin',
-      as: 'adminChannel'
+      through: "Channel_Admin",
+      as: "adminChannel",
     });
     User.hasMany(models.Message);
   };

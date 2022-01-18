@@ -13,6 +13,9 @@ router.post("/tokenIsValid", userControllers.tokenIsValid);
 //Gets user channels
 router.get("/channels", auth, userControllers.getUserChannel);
 
+//Gets user channels
+router.get("/teams", auth, userControllers.getUserTeams);
+
 //Gets Profile
 router.get("/profile/:userName", auth, userControllers.getProfile);
 

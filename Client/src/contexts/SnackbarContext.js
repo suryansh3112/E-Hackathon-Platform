@@ -11,7 +11,7 @@ export function useSnackbar() {
 export function SnackbarProvider({ children }) {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
-  const [type, setType] = useState("");
+  const [type, setType] = useState("success");
 
   const showSnackbar = (message, severity = "success") => {
     setMessage(message);

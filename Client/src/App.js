@@ -1,7 +1,14 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import { useAuth } from "./contexts/AuthContext";
-import { Register, Login, MyProfile, DisplayProfile } from "./pages";
+import {
+  Register,
+  Login,
+  MyProfile,
+  DisplayProfile,
+  TeamInfo,
+  Teams,
+} from "./pages";
 import { Navbar } from "./components";
 
 export default function App() {
@@ -13,6 +20,8 @@ export default function App() {
         <Route path="/" element={<h1>Welcome {userData.user.userName} </h1>} />
         <Route path="/profile" element={<MyProfile />} />
         <Route path="/profile/:userName" element={<DisplayProfile />} />
+        <Route path="/teams" element={<Teams />} />
+        <Route path="/teams/:teamId" element={<TeamInfo />} />
       </Routes>
     );
   };
