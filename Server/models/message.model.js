@@ -3,13 +3,13 @@ module.exports = (sequelize, DataTypes) => {
     id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
-      primaryKey: true
+      primaryKey: true,
     },
-    text: {
+    message: {
       type: DataTypes.STRING,
       unique: true,
-      allowNull: false
-    }
+      allowNull: false,
+    },
   });
 
   Message.associate = (models) => {

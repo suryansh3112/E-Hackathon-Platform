@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles } from '@mui/styles';
 import Fab from '@mui/material/Fab';
 import SendIcon from '@mui/icons-material/Send';
@@ -109,14 +109,24 @@ const useStyles = makeStyles({
   },
 
   content__footer: {
+    borderTop: '1px solid #ebe7fb',
     paddingTop: 30,
     display: 'flex',
   },
 });
 export default function ChatContent(props) {
   const classes = useStyles();
-  const { activeChannel } = props;
-  const [message, setMessage] = useState('');
+  const { activeChannel, messagesArray } = props;
+  const [newMessage, setNewMessage] = useState('');
+
+  if (!activeChannel) {
+    return (
+      <div className={classes.root}>
+        <h2>Make Sure Internet is connected</h2>
+      </div>
+    );
+  }
+
   return (
     <div className={classes.root}>
       <div className={classes.content__header}>
@@ -124,21 +134,32 @@ export default function ChatContent(props) {
         <p>{activeChannel?.name}</p>
       </div>
       <div className={classes.content__body}>
-        {chatItms?.length > 0 &&
-          chatItms.map((message) => {
-            return <Message key={message.id} messageObject={message} />;
-          })}
+        {messagesArray?.length > 0 ? (
+          messagesArray.map((message) => {
+            return (
+              <Message
+                key={message.id}
+                message={message.message}
+                createdAt={message.createdAt}
+                name={message.user.profile.fullName}
+                userId={message.userId}
+              />
+            );
+          })
+        ) : (
+          <h2>Start Conversation</h2>
+        )}
       </div>
       <div className={classes.content__footer}>
         <TextField
           label='Message'
           name='message'
-          value={message}
+          value={newMessage}
           style={{ flexGrow: 1 }}
           size='small'
-          onChange={(e) => setMessage(e.target.value)}
+          onChange={(e) => setNewMessage(e.target.value)}
         />
-        {message?.length > 0 && (
+        {newMessage?.length > 0 && (
           <Fab
             style={{ marginLeft: 10 }}
             size='small'

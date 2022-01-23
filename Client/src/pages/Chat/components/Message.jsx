@@ -42,26 +42,29 @@ const useStyles = makeStyles({
 });
 export default function Message(props) {
   const classes = useStyles();
-  const {
-    messageObject: {
-      userId,
-      name = 'Suryansh Purohit',
-      msg,
-      time = '11:08 pm',
-    },
-  } = props;
+  const { userId, name, message, createdAt } = props;
   const { userData } = useAuth();
   const me = userData.user.id === userId;
+
+  const getTime = () => {
+    const t = new Date(createdAt);
+    return t.toLocaleString('en-US', {
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true,
+    });
+  };
+
   return (
     <div className={`${classes.chat__item} ${me && classes.my_chat__item}`}>
       <div className={classes.left}>
         <Avatar src='/broken-image.jpg' />
-        <p className={classes.lightText}>{time}</p>
+        <p className={classes.lightText}>{getTime(createdAt)}</p>
       </div>
       <div className={classes.right}>
         <p className={`${classes.name} ${me && classes.myName}`}>{name}</p>
         <div className={`${me ? classes.myMessage : classes.messageBody}`}>
-          {msg}
+          {message}
         </div>
       </div>
     </div>

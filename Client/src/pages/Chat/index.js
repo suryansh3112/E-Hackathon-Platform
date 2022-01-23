@@ -41,7 +41,13 @@ export default function Chat() {
         setActiveChannel={setActiveChannel}
         activeChannel={activeChannel}
       />
-      <ChatContent activeChannel={activeChannel} />
+      <ChatContent
+        activeChannel={activeChannel}
+        messagesArray={
+          channels?.find((channel) => channel.id === activeChannel?.id)
+            ?.messages
+        }
+      />
       <ActiveUsers />
     </div>
   );

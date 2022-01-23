@@ -27,24 +27,23 @@ const useStyles = makeStyles({
   },
 });
 export default function ChatListItem(props) {
-  const { channel, setActiveChannel, activeChannel } = props;
+  const { channelName, channelId, setActiveChannel, activeChannel } = props;
   const classes = useStyles();
-  const { name, id } = channel;
 
   const setChannel = () => {
-    setActiveChannel({ id, name });
+    setActiveChannel({ name: channelName, id: channelId });
   };
 
   return (
     <div
       className={`${classes.root} ${
-        activeChannel?.id === id ? classes.active : ''
+        activeChannel?.id === channelId ? classes.active : ''
       }`}
       onClick={setChannel}
     >
       <Avatar src='/broken-image.jpg' />
       <div>
-        <p className={classes.name}>{name}</p>
+        <p className={classes.name}>{channelName}</p>
       </div>
     </div>
   );

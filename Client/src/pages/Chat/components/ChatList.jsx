@@ -22,7 +22,8 @@ export default function ChatList(props) {
               return (
                 <ChatListItem
                   key={channel.id}
-                  channel={channel}
+                  channelName={channel.name}
+                  channelId={channel.id}
                   setActiveChannel={setActiveChannel}
                   activeChannel={activeChannel}
                 />
