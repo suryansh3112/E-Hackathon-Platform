@@ -18,8 +18,21 @@ app.use('/team', teamRoute);
 const channelRoute = require('./routes/channel.route');
 app.use('/channel', channelRoute);
 
+const socketio = require('socket.io');
+const http = require('http');
+const server = http.createServer(app);
+
+const io = socketio(server, {
+  cors: {
+    origin: '*', // put frontend url in production
+    // credentials: true,
+  },
+});
+
+require('./sockets')(io);
+
 models.sequelize.sync({ alter: true }).then(() => {
-  app.listen(PORT, async () => {
+  server.listen(PORT, async () => {
     console.log(`The Server has started on port ${PORT}.`);
   });
 });

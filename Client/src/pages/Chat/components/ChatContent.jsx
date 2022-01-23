@@ -116,7 +116,7 @@ const useStyles = makeStyles({
 });
 export default function ChatContent(props) {
   const classes = useStyles();
-  const { activeChannel, messagesArray } = props;
+  const { activeChannel, messagesArray, sendMessage } = props;
   const [newMessage, setNewMessage] = useState('');
 
   if (!activeChannel) {
@@ -126,6 +126,11 @@ export default function ChatContent(props) {
       </div>
     );
   }
+
+  const handleClick = () => {
+    sendMessage(newMessage, activeChannel.id);
+    setNewMessage('');
+  };
 
   return (
     <div className={classes.root}>
@@ -165,6 +170,7 @@ export default function ChatContent(props) {
             size='small'
             color='secondary'
             aria-label='edit'
+            onClick={handleClick}
           >
             <SendIcon />
           </Fab>

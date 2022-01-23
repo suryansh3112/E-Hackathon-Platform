@@ -3,8 +3,7 @@ import { makeStyles } from '@mui/styles';
 import ChatList from './components/ChatList';
 import ChatContent from './components/ChatContent';
 import ActiveUsers from './components/ActiveUsers';
-import { fetchAllUsersChannels } from './utils';
-import { useAuth } from '../../contexts/AuthContext';
+import { useChat } from '../../contexts/ChatContext';
 
 const useStyles = makeStyles({
   root: {
@@ -18,21 +17,8 @@ const useStyles = makeStyles({
 
 export default function Chat() {
   const classes = useStyles();
-  const { userData } = useAuth();
-  const [channels, setChannels] = useState(null);
+  const { channels, sendMessage } = useChat();
   const [activeChannel, setActiveChannel] = useState(null);
-
-  useEffect(() => {
-    const getData = async () => {
-      const res = await fetchAllUsersChannels(userData.token);
-      if (res.success) {
-        setChannels(res.data);
-      } else {
-        console.log(res.message);
-      }
-    };
-    getData();
-  }, []);
 
   return (
     <div className={classes.root}>
@@ -47,6 +33,7 @@ export default function Chat() {
           channels?.find((channel) => channel.id === activeChannel?.id)
             ?.messages
         }
+        sendMessage={sendMessage}
       />
       <ActiveUsers />
     </div>

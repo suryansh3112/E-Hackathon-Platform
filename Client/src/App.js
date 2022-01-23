@@ -1,6 +1,6 @@
-import React from "react";
-import { Routes, Route } from "react-router-dom";
-import { useAuth } from "./contexts/AuthContext";
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import { useAuth } from './contexts/AuthContext';
 import {
   Register,
   Login,
@@ -9,19 +9,21 @@ import {
   TeamInfo,
   Teams,
   Chat,
-} from "./pages";
-import { Navbar } from "./components";
-import { makeStyles } from "@mui/styles";
-import "./App.css";
+} from './pages';
+import { SocketProvider } from './contexts/SocketContext';
+import { ChatProvider } from './contexts/ChatContext';
+import { Navbar } from './components';
+import { makeStyles } from '@mui/styles';
+import './App.css';
 
 const useStyles = makeStyles({
   root: {
-    display: "flex",
-    flexDirection: "column",
-    height: "100vh",
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100vh',
   },
   appContent: {
-    display: "flex",
+    display: 'flex',
     flexGrow: 1,
   },
 });
@@ -32,20 +34,20 @@ export default function App() {
   const AuthenticatedRoutes = () => {
     return (
       <Routes>
-        <Route path="/" element={<h1>Welcome {userData.user.userName} </h1>} />
-        <Route path="/profile" element={<MyProfile />} />
-        <Route path="/profile/:userName" element={<DisplayProfile />} />
-        <Route path="/chat" element={<Chat />} />
-        <Route path="/teams" element={<Teams />} />
-        <Route path="/teams/:teamId" element={<TeamInfo />} />
+        <Route path='/' element={<h1>Welcome {userData.user.userName} </h1>} />
+        <Route path='/profile' element={<MyProfile />} />
+        <Route path='/profile/:userName' element={<DisplayProfile />} />
+        <Route path='/chat' element={<Chat />} />
+        <Route path='/teams' element={<Teams />} />
+        <Route path='/teams/:teamId' element={<TeamInfo />} />
       </Routes>
     );
   };
   const UnAuthenticatedRoutes = () => {
     return (
       <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route path='/login' element={<Login />} />
+        <Route path='/register' element={<Register />} />
       </Routes>
     );
   };
@@ -54,7 +56,11 @@ export default function App() {
       <Navbar />
       <div className={classes.appContent}>
         {userData.isLoggedIn ? (
-          <AuthenticatedRoutes />
+          <SocketProvider>
+            <ChatProvider>
+              <AuthenticatedRoutes />
+            </ChatProvider>
+          </SocketProvider>
         ) : (
           <UnAuthenticatedRoutes />
         )}
