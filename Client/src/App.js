@@ -8,11 +8,26 @@ import {
   DisplayProfile,
   TeamInfo,
   Teams,
+  Chat,
 } from "./pages";
 import { Navbar } from "./components";
+import { makeStyles } from "@mui/styles";
+import "./App.css";
 
+const useStyles = makeStyles({
+  root: {
+    display: "flex",
+    flexDirection: "column",
+    height: "100vh",
+  },
+  appContent: {
+    display: "flex",
+    flexGrow: 1,
+  },
+});
 export default function App() {
   const { userData } = useAuth();
+  const classes = useStyles();
 
   const AuthenticatedRoutes = () => {
     return (
@@ -20,6 +35,7 @@ export default function App() {
         <Route path="/" element={<h1>Welcome {userData.user.userName} </h1>} />
         <Route path="/profile" element={<MyProfile />} />
         <Route path="/profile/:userName" element={<DisplayProfile />} />
+        <Route path="/chat" element={<Chat />} />
         <Route path="/teams" element={<Teams />} />
         <Route path="/teams/:teamId" element={<TeamInfo />} />
       </Routes>
@@ -34,13 +50,15 @@ export default function App() {
     );
   };
   return (
-    <>
+    <div className={classes.root}>
       <Navbar />
-      {userData.isLoggedIn ? (
-        <AuthenticatedRoutes />
-      ) : (
-        <UnAuthenticatedRoutes />
-      )}
-    </>
+      <div className={classes.appContent}>
+        {userData.isLoggedIn ? (
+          <AuthenticatedRoutes />
+        ) : (
+          <UnAuthenticatedRoutes />
+        )}
+      </div>
+    </div>
   );
 }

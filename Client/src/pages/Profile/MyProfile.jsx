@@ -9,7 +9,7 @@ const useStyles = makeStyles({
   root: {
     display: "flex",
     flexDirection: "column",
-    justifyContent: "center",
+    flexGrow: 1,
     alignItems: "center",
   },
   btn: {

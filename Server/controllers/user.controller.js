@@ -180,11 +180,12 @@ const getUserChannel = async (req, res) => {
     const user = await User.findByPk(req.user);
     const channel = await user.getChannels();
     res.status(200).json({
+      success: true,
       message: "Channels Info",
       data: channel,
     });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 

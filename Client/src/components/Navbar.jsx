@@ -20,6 +20,7 @@ const loggedOutPages = [
 const loggedInPages = [
   { name: "Profile", route: "/profile" },
   { name: "Teams", route: "/teams" },
+  { name: "Chat", route: "/chat" },
 ];
 
 const Navbar = () => {
