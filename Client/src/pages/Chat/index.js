@@ -19,6 +19,14 @@ export default function Chat() {
   const classes = useStyles();
   const { channels, sendMessage } = useChat();
   const [activeChannel, setActiveChannel] = useState(null);
+  const [messages, setMessages] = useState(null);
+
+  useEffect(() => {
+    const a = channels?.find(
+      (channel) => channel.id === activeChannel?.id
+    )?.messages;
+    setMessages(a);
+  }, [channels, activeChannel]);
 
   return (
     <div className={classes.root}>
@@ -29,10 +37,7 @@ export default function Chat() {
       />
       <ChatContent
         activeChannel={activeChannel}
-        messagesArray={
-          channels?.find((channel) => channel.id === activeChannel?.id)
-            ?.messages
-        }
+        messagesArray={messages}
         sendMessage={sendMessage}
       />
       <ActiveUsers />

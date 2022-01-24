@@ -42,7 +42,7 @@ const useStyles = makeStyles({
 });
 export default function Message(props) {
   const classes = useStyles();
-  const { userId, name, message, createdAt } = props;
+  const { userId, name, message, createdAt, lastMessage, setRef } = props;
   const { userData } = useAuth();
   const me = userData.user.id === userId;
 
@@ -56,7 +56,10 @@ export default function Message(props) {
   };
 
   return (
-    <div className={`${classes.chat__item} ${me && classes.my_chat__item}`}>
+    <div
+      className={`${classes.chat__item} ${me && classes.my_chat__item}`}
+      ref={lastMessage ? setRef : null}
+    >
       <div className={classes.left}>
         <Avatar src='/broken-image.jpg' />
         <p className={classes.lightText}>{getTime(createdAt)}</p>

@@ -1,8 +1,8 @@
 let userSockets = {}; // userId -> socketId
 
-const setSocket = (userId, socketId) => {
+const setSocket = (userId, userInfo) => {
   if (!userId) return;
-  userSockets[userId] = socketId;
+  userSockets[userId] = userInfo;
   // console.log(userSockets);
 };
 

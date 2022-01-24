@@ -5,6 +5,7 @@ const {
   deleteSocket,
 } = require('./controllers/socket.controller');
 const models = require('./models');
+const { Message, User, Channel, Profile } = models;
 
 const socketAuth = (socket, next) => {
   try {
@@ -26,19 +27,48 @@ module.exports = (io) => {
   io.use(socketAuth);
 
   io.on('connection', async (socket) => {
-    setSocket(socket.userId, socket.id);
-    const user = await models.User.findByPk(socket.userId);
+    const user = await User.findOne({
+      where: { id: socket.userId },
+      include: {
+        model: Profile,
+        attributes: ['fullName', 'firstName', 'lastName'],
+      },
+    });
+    const profile = user?.profile;
+    if (!profile) return;
+    const userId = socket.userId;
 
+    setSocket(userId, { fullName: profile.fullName });
+    socket.join(userId);
     console.log(user.userName, ' is connected');
-    socket.on('sendMessage', async ({ channelId, message }) => {
-      const channel = await models.Channel.findByPk(channelId);
-      const participants = await channel.getParticipants();
-      const receipients = participants.map((user) =>
-        getSocket(user.dataValues.id)
-      );
-      socket.broadcast
-        .to(receipients)
-        .emit('receiveMessage', { message, by: user.userName });
+
+    socket.on('sendMessage', async ({ channelId, message }, callback) => {
+      try {
+        if (!message || !channelId) {
+          callback({ success: false, message: 'Incomplete Data' });
+          return;
+        }
+
+        const newMessage = await Message.create({
+          message,
+          userId,
+          channelId,
+        });
+
+        const channel = await Channel.findByPk(channelId);
+        const participants = await channel.getParticipants();
+        const newparticipants = participants.filter(
+          (user) => user.id !== userId
+        );
+
+        const response = { ...newMessage.dataValues, user: { profile } };
+        newparticipants.forEach((user) => {
+          socket.broadcast.to(user.id).emit('receiveMessage', response);
+        });
+        callback({ success: true, data: response });
+      } catch (error) {
+        callback({ success: false, message: error.message });
+      }
     });
   });
 };

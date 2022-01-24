@@ -1,86 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { makeStyles } from '@mui/styles';
 import Fab from '@mui/material/Fab';
 import SendIcon from '@mui/icons-material/Send';
 import Avatar from '@mui/material/Avatar';
 import Message from './Message';
 import { TextField } from '@mui/material';
-import { useState } from 'react';
-const chatItms = [
-  {
-    id: 1,
-    userId: 'e0480185-25a2-4074-b5f5-4e93910fe294',
-    image:
-      'https://pbs.twimg.com/profile_images/1116431270697766912/-NfnQHvh_400x400.jpg',
-    type: '',
-    msg: 'Hi Tim, How are you?',
-  },
-  {
-    id: 2,
-    image:
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTA78Na63ws7B7EAWYgTr9BxhX_Z8oLa1nvOA&usqp=CAU',
-    type: 'other',
-    msg: 'I am fine.',
-  },
-  {
-    id: 3,
-    userId: 'e0480185-25a2-4074-b5f5-4e93910fe294',
-
-    image:
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTA78Na63ws7B7EAWYgTr9BxhX_Z8oLa1nvOA&usqp=CAU',
-    type: 'other',
-    msg: 'What about you?',
-  },
-  {
-    id: 4,
-    image:
-      'https://pbs.twimg.com/profile_images/1116431270697766912/-NfnQHvh_400x400.jpg',
-    type: '',
-    msg: 'Awesome these days.',
-  },
-  {
-    id: 5,
-    image:
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTA78Na63ws7B7EAWYgTr9BxhX_Z8oLa1nvOA&usqp=CAU',
-    type: 'other',
-    msg: "Finally. What's the plan?",
-  },
-  {
-    id: 6,
-    userId: 'e0480185-25a2-4074-b5f5-4e93910fe294',
-
-    image:
-      'https://pbs.twimg.com/profile_images/1116431270697766912/-NfnQHvh_400x400.jpg',
-    type: '',
-    msg: 'what plan mate?',
-  },
-  {
-    id: 7,
-    userId: 'e0480185-25a2-4074-b5f5-4e93910fe294',
-
-    image:
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTA78Na63ws7B7EAWYgTr9BxhX_Z8oLa1nvOA&usqp=CAU',
-    type: 'other',
-    msg: "I'm taliking about the tutorial",
-  },
-  {
-    id: 6,
-    userId: 'e0480185-25a2-4074-b5f5-4e93910fe294',
-
-    image:
-      'https://pbs.twimg.com/profile_images/1116431270697766912/-NfnQHvh_400x400.jpg',
-    type: '',
-    msg: "I'm taliking about the tutorial I'm taliking about the tutorial I'm taliking about the tutorial",
-  },
-  {
-    id: 7,
-
-    image:
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTA78Na63ws7B7EAWYgTr9BxhX_Z8oLa1nvOA&usqp=CAU',
-    type: 'other',
-    msg: "I'm taliking about the tutorial I'm taliking about the tutorial I'm taliking about the tutorial",
-  },
-];
 
 const useStyles = makeStyles({
   root: {
@@ -118,6 +42,11 @@ export default function ChatContent(props) {
   const classes = useStyles();
   const { activeChannel, messagesArray, sendMessage } = props;
   const [newMessage, setNewMessage] = useState('');
+  const setRef = useCallback((node) => {
+    if (node) {
+      node.scrollIntoView({ smooth: true });
+    }
+  }, []);
 
   if (!activeChannel) {
     return (
@@ -140,7 +69,7 @@ export default function ChatContent(props) {
       </div>
       <div className={classes.content__body}>
         {messagesArray?.length > 0 ? (
-          messagesArray.map((message) => {
+          messagesArray.map((message, idx) => {
             return (
               <Message
                 key={message.id}
@@ -148,6 +77,8 @@ export default function ChatContent(props) {
                 createdAt={message.createdAt}
                 name={message.user.profile.fullName}
                 userId={message.userId}
+                setRef={setRef}
+                lastMessage={messagesArray.length - 1 === idx}
               />
             );
           })

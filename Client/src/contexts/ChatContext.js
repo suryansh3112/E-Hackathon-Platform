@@ -14,6 +14,17 @@ export function ChatProvider({ children }) {
   const { userData } = useAuth();
   const [channels, setChannels] = useState(null);
 
+  const addMessageToChannel = (messageObj) => {
+    let index = channels?.findIndex((x) => x.id === messageObj.channelId);
+    if (index !== -1) {
+      let temporaryarray = channels.slice();
+      temporaryarray[index]['messages'] = [
+        ...temporaryarray[index]['messages'],
+        messageObj,
+      ];
+      setChannels(temporaryarray);
+    }
+  };
   useEffect(() => {
     const getData = async () => {
       const res = await fetchAllUsersChannels(userData.token);
@@ -29,15 +40,27 @@ export function ChatProvider({ children }) {
   useEffect(() => {
     if (socket == null) return;
 
-    socket.on('receiveMessage', (message) => {
-      console.log(message);
-    });
+    socket.on('receiveMessage', addMessageToChannel);
 
     return () => socket.off('receiveMessage');
   }, [socket]);
 
   const sendMessage = (message, channelId) => {
-    socket.emit('sendMessage', { message, channelId });
+    socket.emit(
+      'sendMessage',
+      {
+        message,
+        channelId,
+      },
+      (res) => {
+        const { success, data, message } = res;
+        if (success) {
+          addMessageToChannel(data);
+        } else {
+          console.log(message);
+        }
+      }
+    );
   };
 
   return (
