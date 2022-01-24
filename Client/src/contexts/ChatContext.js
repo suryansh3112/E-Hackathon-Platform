@@ -12,19 +12,24 @@ export function useChat() {
 export function ChatProvider({ children }) {
   const socket = useSocket();
   const { userData } = useAuth();
-  const [channels, setChannels] = useState(null);
+  const [channels, setChannels] = useState([]);
+  const [activeChannel, setActiveChannel] = useState(null);
 
   const addMessageToChannel = (messageObj) => {
-    let index = channels?.findIndex((x) => x.id === messageObj.channelId);
-    if (index !== -1) {
-      let temporaryarray = channels.slice();
-      temporaryarray[index]['messages'] = [
-        ...temporaryarray[index]['messages'],
-        messageObj,
-      ];
-      setChannels(temporaryarray);
-    }
+    setChannels((prev) => {
+      let index = prev.findIndex((x) => x.id === messageObj.channelId);
+      if (index !== -1) {
+        let temporaryarray = prev.slice();
+        temporaryarray[index]['messages'] = [
+          ...temporaryarray[index]['messages'],
+          messageObj,
+        ];
+        return temporaryarray;
+      }
+      return prev;
+    });
   };
+
   useEffect(() => {
     const getData = async () => {
       const res = await fetchAllUsersChannels(userData.token);
@@ -64,7 +69,9 @@ export function ChatProvider({ children }) {
   };
 
   return (
-    <ChatContext.Provider value={{ channels, sendMessage }}>
+    <ChatContext.Provider
+      value={{ channels, sendMessage, activeChannel, setActiveChannel }}
+    >
       {children}
     </ChatContext.Provider>
   );

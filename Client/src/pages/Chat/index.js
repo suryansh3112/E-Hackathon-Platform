@@ -17,8 +17,7 @@ const useStyles = makeStyles({
 
 export default function Chat() {
   const classes = useStyles();
-  const { channels, sendMessage } = useChat();
-  const [activeChannel, setActiveChannel] = useState(null);
+  const { channels, sendMessage, activeChannel, setActiveChannel } = useChat();
   const [messages, setMessages] = useState(null);
 
   useEffect(() => {
