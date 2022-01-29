@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   const Profile = sequelize.define(
-    "profile",
+    'profile',
     {
       id: {
         type: DataTypes.UUID,
@@ -13,12 +13,14 @@ module.exports = (sequelize, DataTypes) => {
       linkedin_url: DataTypes.STRING,
       github_url: DataTypes.STRING,
       twitter_url: DataTypes.STRING,
+      resume_url: DataTypes.STRING,
+      image_url: DataTypes.STRING,
       fullName: {
         type: DataTypes.VIRTUAL,
         get() {
           if (this.firstName || this.lastName)
             return `${this.firstName} ${this.lastName}`;
-          return "";
+          return '';
         },
       },
     },

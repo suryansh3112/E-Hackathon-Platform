@@ -128,10 +128,11 @@ const updateProfile = async (req, res) => {
     }
 
     res.status(200).json({
+      success: true,
       message: 'Updated Profile Successfully',
     });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
@@ -142,12 +143,13 @@ const getProfile = async (req, res) => {
     });
     const profile = await user.getProfile();
     res.status(200).json({
+      success: true,
       message: 'Profile Info',
-      profile: profile,
+      data: profile,
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 

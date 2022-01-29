@@ -18,6 +18,12 @@ app.use('/team', teamRoute);
 const channelRoute = require('./routes/channel.route');
 app.use('/channel', channelRoute);
 
+app.use('/uploads', express.static('uploads'));
+
+//Utils
+const uploadData = require('./routes/uploadData');
+app.use('/api', uploadData);
+
 const socketio = require('socket.io');
 const http = require('http');
 const server = http.createServer(app);

@@ -9,7 +9,7 @@ const useStyles = makeStyles({
   root: {
     display: 'flex',
     flexGrow: 1,
-    backgroundColor: '#f4f3f8',
+    // backgroundColor: '#f4f3f8',
     borderRadius: 10,
     padding: '15px 20px',
   },
