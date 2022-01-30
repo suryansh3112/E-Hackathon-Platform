@@ -59,7 +59,16 @@ const getTeam = async (req, res) => {
         attributes: ['id', 'userName'],
         include: {
           model: models.Profile,
-          attributes: ['id', 'fullName', 'firstName', 'lastName', 'image_url'],
+          attributes: [
+            'id',
+            'fullName',
+            'firstName',
+            'lastName',
+            'image_url',
+            'linkedin_url',
+            'github_url',
+            'twitter_url',
+          ],
         },
       },
     });

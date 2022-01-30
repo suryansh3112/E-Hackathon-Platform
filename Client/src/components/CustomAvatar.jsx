@@ -22,7 +22,7 @@ function stringToColor(string = '') {
   return color;
 }
 
-function stringAvatar(name, size, image_url) {
+function stringAvatar(name, size, image_url, onClickHandler) {
   let str = name?.split(' ');
   let b = str?.[0]?.[0] || '';
   let c = str?.[1]?.[0] || '';
@@ -35,15 +35,38 @@ function stringAvatar(name, size, image_url) {
       bgcolor: name && stringToColor(name),
       width: size,
       height: size,
-      m: 'auto',
+      ':hover': {
+        cursor: onClickHandler ? 'pointer' : 'auto',
+      },
     },
     children: `${t.toUpperCase()}`,
   };
 }
 
-export default function CustomAvatar({ name, size = 80, image_url }) {
+export default function CustomAvatar({
+  name,
+  size = 80,
+  image_url,
+  onClickHandler,
+}) {
   if (!name && !image_url) {
-    return <Avatar sx={{ width: size, height: size }} />;
+    return (
+      <Avatar
+        onClick={onClickHandler}
+        sx={{
+          width: size,
+          height: size,
+          ':hover': {
+            cursor: onClickHandler ? 'pointer' : 'auto',
+          },
+        }}
+      />
+    );
   }
-  return <Avatar {...stringAvatar(name, size, image_url)} />;
+  return (
+    <Avatar
+      onClick={onClickHandler}
+      {...stringAvatar(name, size, image_url, onClickHandler)}
+    />
+  );
 }

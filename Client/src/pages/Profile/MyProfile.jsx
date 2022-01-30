@@ -10,6 +10,11 @@ import { makeStyles } from '@mui/styles';
 import { Card } from '../../components';
 import Typography from '@mui/material/Typography';
 import ImageUpload from '../../components/ImageUpload';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import GitHubIcon from '@mui/icons-material/GitHub';
+import TwitterIcon from '@mui/icons-material/Twitter';
+import InputAdornment from '@mui/material/InputAdornment';
+
 const useStyles = makeStyles({
   root: {
     display: 'flex',
@@ -174,7 +179,50 @@ export default function MyProfile() {
           Item Three
         </TabPanel>
         <TabPanel value={value} index={3}>
-          Item Three
+          <Card title={'Online Profiles'}>
+            <TextField
+              label='Github'
+              name='github_url'
+              value={profileData.github_url}
+              onChange={handleChange}
+              margin='normal'
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position='start'>
+                    <GitHubIcon sx={{ color: '#222' }} />
+                  </InputAdornment>
+                ),
+              }}
+            />
+            <TextField
+              label='Linkedin'
+              name='linkedin_url'
+              value={profileData.linkedin_url}
+              onChange={handleChange}
+              margin='normal'
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position='start'>
+                    <LinkedInIcon sx={{ color: '#0283be' }} />
+                  </InputAdornment>
+                ),
+              }}
+            />
+            <TextField
+              label='Twitter'
+              name='twitter_url'
+              value={profileData.twitter_url}
+              onChange={handleChange}
+              margin='normal'
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position='start'>
+                    <TwitterIcon sx={{ color: '#1da1f1' }} />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Card>
         </TabPanel>
       </Box>
       <div className={classes.button}>

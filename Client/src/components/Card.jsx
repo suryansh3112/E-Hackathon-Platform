@@ -3,19 +3,24 @@ import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles({
   flexOne: {
-    flexGrow: 1,
+    flexGrow: ({ width }) => (width ? 0 : 1),
     paddingRight: 20,
     paddingLeft: 20,
     maxWidth: 600,
     boxSizing: 'border-box',
+    width: ({ width }) => (width ? width : 'auto'),
+    display: 'flex',
+    flexDirection: 'column',
   },
   card: {
+    flexGrow: 1,
     padding: 40,
     boxShadow: 'rgb(0 0 0 / 8%) 0px 1px 4px 0px',
     backgroundColor: '#fff',
     borderRadius: 8,
     display: 'flex',
     flexDirection: 'column',
+    alignItems: ({ centered }) => (centered ? 'center' : 'stretch'),
   },
   title: {
     fontSize: 18,
@@ -23,8 +28,9 @@ const useStyles = makeStyles({
   },
 });
 
-function Card({ title, children }) {
-  const classes = useStyles();
+function Card(props) {
+  const { title, children, width, centered } = props;
+  const classes = useStyles({ width, centered });
 
   return (
     <div className={classes.flexOne}>

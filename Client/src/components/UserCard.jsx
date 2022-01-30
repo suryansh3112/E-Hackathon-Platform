@@ -1,43 +1,49 @@
 import React from 'react';
 import CustomAvatar from './CustomAvatar';
 import { makeStyles } from '@mui/styles';
-import { padding } from '@mui/system';
 import { useNavigate } from 'react-router-dom';
+import { Card } from '.';
+import Socials from './Socials';
 const useStyles = makeStyles({
-  root: {
-    backgroundColor: '#EEEEEE',
-    padding: '10px 5px',
-    borderRadius: 5,
-    margin: '10px 10px',
-    textAlign: 'center',
-    width: 200,
+  name: {
+    fontSize: 20,
+    fontWeight: 600,
   },
-  img: {
-    textAlign: 'center',
-    backgroundColor: 'red',
+  subText: {
+    fontSize: 14,
+    fontWeight: 400,
+    color: '#8b9497',
+    margin: 0,
+    marginBottom: 10,
   },
 });
 export default function UserCard(props) {
   const { user, admin } = props;
   const {
     userName,
-    profile: { fullName, image_url },
+    profile: { fullName, image_url, linkedin_url, github_url, twitter_url },
   } = user;
+  console.log(user);
   const navigate = useNavigate();
   const classes = useStyles();
 
   const handleClick = () => navigate(`/profile/${userName}`);
-  return (
-    <div className={classes.root} onClick={handleClick}>
-      <div>
-        {/* Image */}
-        <CustomAvatar name={fullName} image_url={image_url} />
-      </div>
 
-      <div>
-        <h3>{fullName}</h3>
-        <h4>{admin ? 'Admin' : 'Member'}</h4>
-      </div>
-    </div>
+  return (
+    <Card width={300} centered>
+      <CustomAvatar
+        name={fullName}
+        image_url={image_url}
+        onClickHandler={handleClick}
+      />
+      <p className={classes.name}>{fullName}</p>
+      <p className={classes.subText}>{admin ? 'Admin' : 'Member'}</p>
+      <Socials
+        github_url={github_url}
+        twitter_url={twitter_url}
+        linkedin_url={linkedin_url}
+        size={30}
+      />
+    </Card>
   );
 }
