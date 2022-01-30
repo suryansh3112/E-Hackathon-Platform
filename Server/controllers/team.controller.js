@@ -1,4 +1,4 @@
-const models = require("../models");
+const models = require('../models');
 const User = models.User;
 const Team = models.Team;
 const Channel = models.Channel;
@@ -12,7 +12,7 @@ const createTeam = async (req, res) => {
   try {
     const { name } = req.body;
     if (await profileNotCompleted(req.user)) {
-      return res.status(400).json({ message: "Please complete your profile" });
+      return res.status(400).json({ message: 'Please complete your profile' });
     }
     const newTeam = await Team.create({ name, leaderId: req.user });
     await newTeam.addMembers(req.user);
@@ -20,7 +20,7 @@ const createTeam = async (req, res) => {
     await teamChannel.addParticipants(req.user);
     await teamChannel.addAdmins(req.user);
 
-    res.status(200).json({ message: "Successfully Created Team." });
+    res.status(200).json({ message: 'Successfully Created Team.' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -29,20 +29,20 @@ const createTeam = async (req, res) => {
 const joinTeam = async (req, res) => {
   try {
     if (await profileNotCompleted(req.user)) {
-      return res.status(400).json({ message: "Please complete your profile" });
+      return res.status(400).json({ message: 'Please complete your profile' });
     }
     const team = await Team.findOne({
       where: { teamCode: req.params.teamCode },
     });
     if (!team) {
-      return res.status(400).json({ message: "No team found" });
+      return res.status(400).json({ message: 'No team found' });
     }
     const teamChannel = await team.getChannel();
     await team.addMembers(req.user);
     await teamChannel.addParticipants(req.user);
 
     res.status(200).json({
-      message: "Joined Team Successfully",
+      message: 'Joined Team Successfully',
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -55,17 +55,17 @@ const getTeam = async (req, res) => {
       where: { id: req.params.teamId },
       include: {
         model: models.User,
-        as: "members",
-        attributes: ["id", "userName"],
+        as: 'members',
+        attributes: ['id', 'userName'],
         include: {
           model: models.Profile,
-          as: "profile",
+          attributes: ['id', 'fullName', 'firstName', 'lastName', 'image_url'],
         },
       },
     });
 
     res.status(200).json({
-      message: "TeamInfo",
+      message: 'TeamInfo',
       data: team,
     });
   } catch (error) {
@@ -83,7 +83,7 @@ const updateTeam = async (req, res) => {
 
     if (team.leaderId !== req.user) {
       res.status(400).json({
-        message: "Only Leader can update Team Info",
+        message: 'Only Leader can update Team Info',
       });
     }
 
@@ -97,7 +97,7 @@ const updateTeam = async (req, res) => {
     }
 
     res.status(200).json({
-      message: "Updated Team Successfully",
+      message: 'Updated Team Successfully',
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -113,7 +113,7 @@ const deleteTeam = async (req, res) => {
 
     if (team.leaderId !== req.user) {
       res.status(400).json({
-        message: "Only Leader can delete Team",
+        message: 'Only Leader can delete Team',
       });
       return;
     }
@@ -126,7 +126,7 @@ const deleteTeam = async (req, res) => {
     // });
 
     res.status(200).json({
-      message: "Deleted Team Successfully",
+      message: 'Deleted Team Successfully',
     });
   } catch (error) {
     res.status(500).json({ message: error.message });

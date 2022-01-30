@@ -77,6 +77,7 @@ export default function ChatContent(props) {
                 createdAt={message.createdAt}
                 name={message.user.profile.fullName}
                 userId={message.userId}
+                image_url={message.user.profile.image_url}
                 setRef={setRef}
                 lastMessage={messagesArray.length - 1 === idx}
               />

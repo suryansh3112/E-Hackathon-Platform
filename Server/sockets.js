@@ -31,7 +31,7 @@ module.exports = (io) => {
       where: { id: socket.userId },
       include: {
         model: Profile,
-        attributes: ['fullName', 'firstName', 'lastName'],
+        attributes: ['fullName', 'firstName', 'lastName', 'image_url'],
       },
     });
     const profile = user?.profile;

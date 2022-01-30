@@ -1,21 +1,21 @@
-import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { getProfile } from "./utils";
-import { useAuth } from "../../contexts/AuthContext";
-import { makeStyles } from "@mui/styles";
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { getProfile } from './utils';
+import { useAuth } from '../../contexts/AuthContext';
+import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles({
   root: {
     maxWidth: 600,
-    margin: "0 auto 0",
+    margin: '0 auto 0',
   },
   header: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   flex: {
-    display: "flex",
+    display: 'flex',
   },
   flexOne: {
     flex: 1,
@@ -31,13 +31,11 @@ export default function DisplayProfile() {
 
   useEffect(() => {
     const getInfo = async () => {
-      try {
-        const res = await getProfile(params.userName, userData.token);
-        if (res?.profile) {
-          setProfileData(res.profile);
-        }
-      } catch (error) {
-        console.log(error.message);
+      const res = await getProfile(params.userName, userData.token);
+      if (res.success) {
+        setProfileData(res.data);
+      } else {
+        console.log(res.message);
       }
     };
     getInfo();

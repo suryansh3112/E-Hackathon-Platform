@@ -2,6 +2,7 @@ import React from 'react';
 import { makeStyles } from '@mui/styles';
 import Avatar from '@mui/material/Avatar';
 import { useAuth } from '../../../contexts/AuthContext';
+import { CustomAvatar } from '../../../components';
 const useStyles = makeStyles({
   chat__item: {
     display: 'flex',
@@ -42,7 +43,8 @@ const useStyles = makeStyles({
 });
 export default function Message(props) {
   const classes = useStyles();
-  const { userId, name, message, createdAt, lastMessage, setRef } = props;
+  const { userId, name, message, createdAt, image_url, lastMessage, setRef } =
+    props;
   const { userData } = useAuth();
   const me = userData.user.id === userId;
 
@@ -61,7 +63,8 @@ export default function Message(props) {
       ref={lastMessage ? setRef : null}
     >
       <div className={classes.left}>
-        <Avatar src='/broken-image.jpg' />
+        <CustomAvatar name={name} image_url={image_url} size={46} />
+
         <p className={classes.lightText}>{getTime(createdAt)}</p>
       </div>
       <div className={classes.right}>

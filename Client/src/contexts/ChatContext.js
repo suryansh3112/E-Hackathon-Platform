@@ -60,6 +60,7 @@ export function ChatProvider({ children }) {
       (res) => {
         const { success, data, message } = res;
         if (success) {
+          console.log(data);
           addMessageToChannel(data);
         } else {
           console.log(message);

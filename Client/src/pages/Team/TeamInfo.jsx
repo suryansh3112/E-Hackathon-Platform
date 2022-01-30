@@ -1,23 +1,23 @@
-import React, { useState, useEffect } from "react";
-import { makeStyles } from "@mui/styles";
-import { getTeam } from "./utils";
-import { useAuth } from "../../contexts/AuthContext";
-import { useSnackbar } from "../../contexts/SnackbarContext";
-import { useNavigate, useParams } from "react-router-dom";
-import UserCard from "../../components/UserCard";
+import React, { useState, useEffect } from 'react';
+import { makeStyles } from '@mui/styles';
+import { getTeam } from './utils';
+import { useAuth } from '../../contexts/AuthContext';
+import { useSnackbar } from '../../contexts/SnackbarContext';
+import { useNavigate, useParams } from 'react-router-dom';
+import UserCard from '../../components/UserCard';
 
 const useStyles = makeStyles({
   members: {
-    display: "flex",
-    flexWrap: "wrap",
+    display: 'flex',
+    flexWrap: 'wrap',
   },
   heading: {
-    textAlign: "center",
+    textAlign: 'center',
   },
   code: {
-    backgroundColor: "#eeeeee",
+    backgroundColor: '#eeeeee',
     padding: 10,
-    display: "inline",
+    display: 'inline',
   },
 });
 
@@ -35,6 +35,7 @@ export default function TeamInfo() {
         const res = await getTeam(params.teamId, userData.token);
         if (res?.data) {
           setTeam(res.data);
+          console.log(res.data);
         }
       } catch (error) {
         console.log(error.message);

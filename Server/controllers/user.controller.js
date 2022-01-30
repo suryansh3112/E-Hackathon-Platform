@@ -197,7 +197,13 @@ const getUserChannel = async (req, res) => {
             attributes: ['id', 'userName'],
             include: {
               model: models.Profile,
-              attributes: ['id', 'fullName', 'firstName', 'lastName'],
+              attributes: [
+                'id',
+                'fullName',
+                'firstName',
+                'lastName',
+                'image_url',
+              ],
             },
           },
         },
