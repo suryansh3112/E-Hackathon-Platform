@@ -6,14 +6,16 @@ const useStyles = makeStyles({
     flexGrow: 1,
     paddingRight: 20,
     paddingLeft: 20,
+    maxWidth: 600,
+    boxSizing: 'border-box',
   },
   card: {
     padding: 40,
     boxShadow: 'rgb(0 0 0 / 8%) 0px 1px 4px 0px',
     backgroundColor: '#fff',
-    maxWidth: 600,
+    // maxWidth: 600,
     borderRadius: 8,
-    boxSizing: 'border-box',
+    // boxSizing: 'border-box',
     display: 'flex',
     flexDirection: 'column',
   },
@@ -23,15 +25,15 @@ const useStyles = makeStyles({
   },
 });
 
-function ProfileCard({ title, children }) {
+function Card({ title, children }) {
   const classes = useStyles();
 
   return (
     <div className={classes.flexOne}>
-      <p className={classes.title}>{title}</p>
+      {title?.length > 0 && <p className={classes.title}>{title}</p>}
       <div className={classes.card}>{children}</div>
     </div>
   );
 }
 
-export default ProfileCard;
+export default Card;

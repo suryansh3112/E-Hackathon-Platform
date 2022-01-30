@@ -7,7 +7,7 @@ import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import { makeStyles } from '@mui/styles';
-import ProfileCard from './ProfileCard';
+import { Card } from '../../components';
 import Typography from '@mui/material/Typography';
 import ImageUpload from '../../components/ImageUpload';
 const useStyles = makeStyles({
@@ -18,6 +18,7 @@ const useStyles = makeStyles({
   },
   row: {
     display: 'flex',
+    justifyContent: 'center',
   },
   button: {
     marginTop: 10,
@@ -129,7 +130,7 @@ export default function MyProfile() {
         </Box>
         <TabPanel value={value} index={0}>
           <div className={classes.row}>
-            <ProfileCard title={'Basic Information'}>
+            <Card title={'Basic Information'}>
               <TextField
                 required
                 label='First Name'
@@ -146,8 +147,8 @@ export default function MyProfile() {
                 onChange={handleChange}
                 margin='normal'
               />
-            </ProfileCard>
-            <ProfileCard title={'About You'}>
+            </Card>
+            <Card title={'About You'}>
               <ImageUpload
                 image_url={profileData.image_url}
                 setProfileData={setProfileData}
@@ -163,7 +164,7 @@ export default function MyProfile() {
                 style={{ resize: 'none' }}
                 rows={12}
               />
-            </ProfileCard>
+            </Card>
           </div>
         </TabPanel>
         <TabPanel value={value} index={1}>
