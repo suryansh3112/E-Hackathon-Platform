@@ -118,27 +118,22 @@ const deleteTeam = async (req, res) => {
     const team = await Team.findOne({
       where: { id: req.params.teamId },
     });
-    // const teamChannel = await team.getChannel();
-
     if (team.leaderId !== req.user) {
-      res.status(400).json({
+      return res.status(400).json({
+        success: 'false',
         message: 'Only Leader can delete Team',
       });
-      return;
     }
-
     await Team.destroy({
       where: { id: req.params.teamId },
     });
-    // await Channel.destroy({
-    //   where: { id: teamChannel.id }
-    // });
 
     res.status(200).json({
+      success: true,
       message: 'Deleted Team Successfully',
     });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 

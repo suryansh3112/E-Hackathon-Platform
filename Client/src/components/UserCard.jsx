@@ -23,7 +23,6 @@ export default function UserCard(props) {
     userName,
     profile: { fullName, image_url, linkedin_url, github_url, twitter_url },
   } = user;
-  console.log(user);
   const navigate = useNavigate();
   const classes = useStyles();
 

@@ -5,28 +5,28 @@ module.exports = (sequelize, DataTypes) => {
       id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
-        primaryKey: true
+        primaryKey: true,
       },
       name: {
         type: DataTypes.STRING,
-        allowNull: false
-      }
+        allowNull: false,
+      },
     },
     {
-      timestamps: false
+      timestamps: false,
     }
   );
 
   Channel.associate = (models) => {
     Channel.belongsToMany(models.User, {
       through: 'User_Channel',
-      as: 'participants'
+      as: 'participants',
     });
     Channel.belongsToMany(models.User, {
       through: 'Channel_Admin',
-      as: 'admins'
+      as: 'admins',
     });
-    Channel.hasMany(models.Message);
+    Channel.hasMany(models.Message, { onDelete: 'CASCADE' });
     Channel.belongsTo(models.Team);
   };
 
