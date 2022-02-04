@@ -1,26 +1,27 @@
-import * as React from "react";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import Menu from "@mui/material/Menu";
+import * as React from 'react';
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import Menu from '@mui/material/Menu';
 // import MenuIcon from '@mui/icons-material/Menu';
-import { Link } from "react-router-dom";
-import Container from "@mui/material/Container";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
-import MenuItem from "@mui/material/MenuItem";
-import { useAuth } from "../contexts/AuthContext";
+import { Link } from 'react-router-dom';
+import Container from '@mui/material/Container';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import Tooltip from '@mui/material/Tooltip';
+import MenuItem from '@mui/material/MenuItem';
+import { useAuth } from '../contexts/AuthContext';
 const loggedOutPages = [
-  { name: "Login", route: "/login" },
-  { name: "Register", route: "/register" },
+  { name: 'Login', route: '/login' },
+  { name: 'Register', route: '/register' },
 ];
 const loggedInPages = [
-  { name: "Profile", route: "/profile" },
-  { name: "Teams", route: "/teams" },
-  { name: "Chat", route: "/chat" },
+  { name: 'Profile', route: '/profile' },
+  { name: 'Teams', route: '/teams' },
+  { name: 'Chat', route: '/chat' },
+  { name: 'Organise Hackathon', route: '/organise-hackathon' },
 ];
 
 const Navbar = () => {
@@ -54,23 +55,23 @@ const Navbar = () => {
   };
 
   return (
-    <AppBar position="static">
-      <Container maxWidth="xl">
+    <AppBar position='static'>
+      <Container maxWidth='xl'>
         <Toolbar disableGutters>
           <Typography
-            variant="h6"
+            variant='h6'
             noWrap
-            component="div"
+            component='div'
             sx={{ flexGrow: { xs: 1, md: 0 }, mr: 3 }}
           >
             E-Hack
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Button
                 key={page.name}
                 onClick={() => handleCloseNavMenu(page.route)}
-                sx={{ my: 2, color: "white", display: "block" }}
+                sx={{ my: 2, color: 'white', display: 'block' }}
                 component={Link}
                 to={page.route}
               >
@@ -80,23 +81,23 @@ const Navbar = () => {
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
+            <Tooltip title='Open settings'>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar alt='Remy Sharp' src='/static/images/avatar/2.jpg' />
               </IconButton>
             </Tooltip>
             <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
+              sx={{ mt: '45px' }}
+              id='menu-appbar'
               anchorEl={anchorElUser}
               anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
+                vertical: 'top',
+                horizontal: 'right',
               }}
               keepMounted
               transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
+                vertical: 'top',
+                horizontal: 'right',
               }}
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
@@ -108,12 +109,12 @@ const Navbar = () => {
                   component={Link}
                   to={page.route}
                 >
-                  <Typography textAlign="center">{page.name}</Typography>
+                  <Typography textAlign='center'>{page.name}</Typography>
                 </MenuItem>
               ))}
               {userData.isLoggedIn && (
                 <MenuItem onClick={logoutUser}>
-                  <Typography textAlign="center">Logout</Typography>
+                  <Typography textAlign='center'>Logout</Typography>
                 </MenuItem>
               )}
             </Menu>

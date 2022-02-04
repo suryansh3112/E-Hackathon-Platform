@@ -9,6 +9,7 @@ import {
   TeamInfo,
   Teams,
   Chat,
+  OrganiseHackathon,
 } from './pages';
 import { SocketProvider } from './contexts/SocketContext';
 import { ChatProvider } from './contexts/ChatContext';
@@ -40,6 +41,7 @@ export default function App() {
         <Route path='/chat' element={<Chat />} />
         <Route path='/teams' element={<Teams />} />
         <Route path='/teams/:teamId' element={<TeamInfo />} />
+        <Route path='/organise-hackathon' element={<OrganiseHackathon />} />
       </Routes>
     );
   };
