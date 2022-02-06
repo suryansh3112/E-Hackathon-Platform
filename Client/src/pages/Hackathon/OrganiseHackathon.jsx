@@ -8,6 +8,12 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import { Card } from '../../components';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import DateTimePicker from '@mui/lab/DateTimePicker';
+import Stack from '@mui/material/Stack';
+import { createHackathon } from './utils';
+import { useNavigate } from 'react-router-dom';
 
 const useStyles = makeStyles({
   root: {
@@ -22,6 +28,13 @@ const useStyles = makeStyles({
   button: {
     marginTop: 10,
     alignSelf: 'center',
+  },
+  mb_10: {
+    // marginBottom: 100,
+    margin: '0 40px',
+    color: '#000',
+    backgroundColor: 'red',
+    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
   },
 });
 function TabPanel(props) {
@@ -48,15 +61,19 @@ function a11yProps(index) {
 }
 export default function OrganiseHackathon() {
   const classes = useStyles();
+  const { userData } = useAuth();
+  const navigate = useNavigate();
   const [hackathonData, setHackathonData] = useState({
     name: '',
     tagLine: '',
     minTeamSize: '',
     maxTeamSize: '',
-    applicationStartDate: '',
+    applicationStartDate: new Date(),
     applicationEndDate: '',
     hackathonStartDate: '',
     hackathonEndDate: '',
+    website_url: '',
+    about: '',
   });
 
   const [value, setValue] = useState(0);
@@ -72,7 +89,13 @@ export default function OrganiseHackathon() {
   };
 
   const handleClick = async () => {
-    console.log('click');
+    const res = await createHackathon(hackathonData, userData.token);
+    if (res.success) {
+      alert(res.message);
+      navigate('/hackathons');
+    } else {
+      alert(res.message);
+    }
   };
 
   return (
@@ -114,7 +137,7 @@ export default function OrganiseHackathon() {
                 value={hackathonData.tagLine}
                 onChange={handleChange}
                 margin='normal'
-                placeholder="e.g. India\'s biggest hackathon"
+                placeholder="e.g. India's biggest hackathon"
               />
               <TextField
                 required
@@ -152,16 +175,73 @@ export default function OrganiseHackathon() {
           </div>
         </TabPanel>
         <TabPanel value={value} index={1}>
-          <Card></Card>{' '}
+          <Card>
+            <TextField
+              label="Hackathon's Website"
+              name='website_url'
+              value={hackathonData.website_url}
+              onChange={handleChange}
+              margin='normal'
+            />
+          </Card>
         </TabPanel>
         <TabPanel value={value} index={2}>
-          <Card></Card>
+          <Card>
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <Stack spacing={3}>
+                <DateTimePicker
+                  renderInput={(props) => <TextField {...props} />}
+                  label='Application Opens'
+                  value={hackathonData.applicationStartDate}
+                  onChange={(newValue) => {
+                    setHackathonData((prev) => ({
+                      ...prev,
+                      applicationStartDate: newValue,
+                    }));
+                  }}
+                />
+                <DateTimePicker
+                  renderInput={(props) => <TextField {...props} />}
+                  label='Application Closes'
+                  value={hackathonData.applicationEndDate}
+                  onChange={(newValue) => {
+                    setHackathonData((prev) => ({
+                      ...prev,
+                      applicationEndDate: newValue,
+                    }));
+                  }}
+                />
+                <DateTimePicker
+                  renderInput={(props) => <TextField {...props} />}
+                  label='Hackathon Begins'
+                  value={hackathonData.hackathonStartDate}
+                  onChange={(newValue) => {
+                    setHackathonData((prev) => ({
+                      ...prev,
+                      hackathonStartDate: newValue,
+                    }));
+                  }}
+                />
+                <DateTimePicker
+                  renderInput={(props) => <TextField {...props} />}
+                  label='Hackathon Ends'
+                  value={hackathonData.hackathonEndDate}
+                  onChange={(newValue) => {
+                    setHackathonData((prev) => ({
+                      ...prev,
+                      hackathonEndDate: newValue,
+                    }));
+                  }}
+                />
+              </Stack>
+            </LocalizationProvider>
+          </Card>
         </TabPanel>
       </Box>
 
       <div className={classes.button}>
         <Button onClick={handleClick} size='large' variant='contained'>
-          Update
+          Create
         </Button>
       </div>
     </div>

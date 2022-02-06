@@ -18,6 +18,9 @@ app.use('/team', teamRoute);
 const channelRoute = require('./routes/channel.route');
 app.use('/channel', channelRoute);
 
+const hackathonRoute = require('./routes/hackathon.route');
+app.use('/hackathon', hackathonRoute);
+
 app.use('/uploads', express.static('uploads'));
 
 //Utils

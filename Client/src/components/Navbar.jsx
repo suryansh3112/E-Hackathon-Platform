@@ -21,19 +21,26 @@ const loggedInPages = [
   { name: 'Profile', route: '/profile' },
   { name: 'Teams', route: '/teams' },
   { name: 'Chat', route: '/chat' },
-  { name: 'Organise Hackathon', route: '/organise-hackathon' },
+  { name: 'Hackathons', route: '/hackathons' },
 ];
+const organiseHackathon = {
+  name: 'Organise Hackathon',
+  route: '/organise-hackathon',
+};
 
 const Navbar = () => {
-  const { userData, logout } = useAuth();
+  const {
+    userData: { isLoggedIn },
+    logout,
+  } = useAuth();
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [pages, setPages] = React.useState([]);
 
   React.useEffect(() => {
-    setPages(userData.isLoggedIn ? loggedInPages : loggedOutPages);
-  }, [userData]);
+    setPages(isLoggedIn ? loggedInPages : loggedOutPages);
+  }, [isLoggedIn]);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -102,17 +109,20 @@ const Navbar = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {pages.map((page) => (
-                <MenuItem
-                  key={page.name}
-                  onClick={() => handleCloseNavMenu(page.route)}
-                  component={Link}
-                  to={page.route}
-                >
-                  <Typography textAlign='center'>{page.name}</Typography>
-                </MenuItem>
-              ))}
-              {userData.isLoggedIn && (
+              {[...pages, isLoggedIn && organiseHackathon].map((page) => {
+                if (!page) return null;
+                return (
+                  <MenuItem
+                    key={page.name}
+                    onClick={() => handleCloseNavMenu(page.route)}
+                    component={Link}
+                    to={page.route}
+                  >
+                    <Typography textAlign='center'>{page.name}</Typography>
+                  </MenuItem>
+                );
+              })}
+              {isLoggedIn && (
                 <MenuItem onClick={logoutUser}>
                   <Typography textAlign='center'>Logout</Typography>
                 </MenuItem>

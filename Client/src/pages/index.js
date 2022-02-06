@@ -6,3 +6,4 @@ export { default as Teams } from './Team/Teams';
 export { default as TeamInfo } from './Team/TeamInfo';
 export { default as Chat } from './Chat';
 export { default as OrganiseHackathon } from './Hackathon/OrganiseHackathon';
+export { default as Hackathons } from './Hackathon/Hackathons';

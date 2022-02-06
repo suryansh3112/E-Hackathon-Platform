@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   const Team = sequelize.define(
-    "team",
+    'team',
     {
       id: {
         type: DataTypes.UUID,
@@ -23,9 +23,12 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   Team.associate = (models) => {
-    Team.belongsToMany(models.User, { through: "Teammate", as: "members" });
-    Team.belongsTo(models.User, { foreignKey: "leaderId", as: "leader" });
-    Team.hasOne(models.Channel, { onDelete: "CASCADE" });
+    Team.belongsToMany(models.User, { through: 'Teammate', as: 'members' });
+    Team.belongsToMany(models.Hackathon, {
+      through: 'HackathonRegisteredTeam',
+    });
+    Team.belongsTo(models.User, { foreignKey: 'leaderId', as: 'leader' });
+    Team.hasOne(models.Channel, { onDelete: 'CASCADE' });
   };
 
   return Team;

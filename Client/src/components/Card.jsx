@@ -4,8 +4,7 @@ import { makeStyles } from '@mui/styles';
 const useStyles = makeStyles({
   flexOne: {
     flexGrow: ({ width }) => (width ? 0 : 1),
-    paddingRight: 20,
-    paddingLeft: 20,
+    padding: 20,
     maxWidth: 600,
     boxSizing: 'border-box',
     width: ({ width }) => (width ? width : 'auto'),

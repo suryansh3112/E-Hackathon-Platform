@@ -28,6 +28,7 @@ module.exports = (sequelize, DataTypes) => {
     });
     Channel.hasMany(models.Message, { onDelete: 'CASCADE' });
     Channel.belongsTo(models.Team);
+    Channel.belongsTo(models.Hackathon);
   };
 
   return Channel;
