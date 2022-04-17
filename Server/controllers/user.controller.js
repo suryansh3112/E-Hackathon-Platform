@@ -95,6 +95,7 @@ const login = async (req, res) => {
     //Assigning Json Web Token
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET);
     // , {expiresIn: '3h'}
+    const profile = await user.getProfile();
     res.status(200).json({
       token,
       user: {
@@ -102,6 +103,8 @@ const login = async (req, res) => {
         userName: user.userName,
         email: user.email,
         role: user.role,
+        fullName: profile?.fullName,
+        image_url: profile?.image_url,
       },
     });
   } catch (error) {
@@ -164,6 +167,7 @@ const tokenIsValid = async (req, res) => {
       return res.json({ status: false });
     }
     const user = await User.findByPk(verified.id);
+    const profile = await user.getProfile();
     return res.json({
       status: true,
       user: {
@@ -171,6 +175,8 @@ const tokenIsValid = async (req, res) => {
         userName: user.userName,
         email: user.email,
         role: user.role,
+        fullName: profile?.fullName,
+        image_url: profile?.image_url,
       },
     });
   } catch (error) {

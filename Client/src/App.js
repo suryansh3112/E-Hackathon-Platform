@@ -11,6 +11,7 @@ import {
   Chat,
   OrganiseHackathon,
   Hackathons,
+  VideoCall,
 } from './pages';
 import { SocketProvider } from './contexts/SocketContext';
 import { ChatProvider } from './contexts/ChatContext';
@@ -44,6 +45,7 @@ export default function App() {
         <Route path='/teams/:teamId' element={<TeamInfo />} />
         <Route path='/organise-hackathon' element={<OrganiseHackathon />} />
         <Route path='/hackathons' element={<Hackathons />} />
+        <Route path='/video-call/:videoRoomId' element={<VideoCall />} />
       </Routes>
     );
   };

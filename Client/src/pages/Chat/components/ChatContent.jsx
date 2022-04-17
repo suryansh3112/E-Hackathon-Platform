@@ -2,9 +2,11 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { makeStyles } from '@mui/styles';
 import Fab from '@mui/material/Fab';
 import SendIcon from '@mui/icons-material/Send';
+import VideoCallIcon from '@mui/icons-material/VideoCall';
 import Avatar from '@mui/material/Avatar';
 import Message from './Message';
 import { TextField } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles({
   root: {
@@ -61,6 +63,10 @@ export default function ChatContent(props) {
     setNewMessage('');
   };
 
+  const handleVideoCallClick = () => {
+    // sendMessage(newMessage, activeChannel.id);
+  };
+
   return (
     <div className={classes.root}>
       <div className={classes.content__header}>
@@ -96,6 +102,18 @@ export default function ChatContent(props) {
           size='small'
           onChange={(e) => setNewMessage(e.target.value)}
         />
+        <Fab
+          style={{ marginLeft: 10 }}
+          size='small'
+          color='secondary'
+          aria-label='edit'
+          onClick={handleVideoCallClick}
+          component={Link}
+          to={`/video-call/${activeChannel.id}`}
+          target='_blank'
+        >
+          <VideoCallIcon />
+        </Fab>
         {newMessage?.length > 0 && (
           <Fab
             style={{ marginLeft: 10 }}

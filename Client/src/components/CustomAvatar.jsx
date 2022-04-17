@@ -47,7 +47,7 @@ export default function CustomAvatar({
   name,
   size = 80,
   image_url,
-  onClickHandler,
+  onClickHandler = () => {},
 }) {
   if (!name && !image_url) {
     return (
