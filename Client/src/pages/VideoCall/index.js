@@ -27,6 +27,12 @@ const useStyles = makeStyles({
   btn: {
     marginTop: 20,
   },
+  name: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: '#fff',
+    textAlign: 'center',
+  },
 });
 
 export default function VideoCall(props) {
@@ -168,6 +174,8 @@ export default function VideoCall(props) {
 
   return (
     <div className={classes.videoContainer}>
+      <p className={classes.name}>{params.channelName || 'Video Call'}</p>
+
       <div className={classes.flex_1}>
         <Video
           videoRef={userVideo}

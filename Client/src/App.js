@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import { useAuth } from './contexts/AuthContext';
 import {
   Register,
@@ -33,6 +33,8 @@ const useStyles = makeStyles({
 export default function App() {
   const { userData } = useAuth();
   const classes = useStyles();
+  const location = useLocation();
+  console.log('Location', location);
 
   const AuthenticatedRoutes = () => {
     return (
@@ -45,7 +47,10 @@ export default function App() {
         <Route path='/teams/:teamId' element={<TeamInfo />} />
         <Route path='/organise-hackathon' element={<OrganiseHackathon />} />
         <Route path='/hackathons' element={<Hackathons />} />
-        <Route path='/video-call/:videoRoomId' element={<VideoCall />} />
+        <Route
+          path='/video-call/:videoRoomId/:channelName'
+          element={<VideoCall />}
+        />
       </Routes>
     );
   };
@@ -59,7 +64,7 @@ export default function App() {
   };
   return (
     <div className={classes.root}>
-      <Navbar />
+      {!location.pathname.includes('/video-call') && <Navbar />}
       <div className={classes.appContent}>
         {userData.isLoggedIn ? (
           <SocketProvider>

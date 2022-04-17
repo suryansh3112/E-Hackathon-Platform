@@ -109,7 +109,7 @@ export default function ChatContent(props) {
           aria-label='edit'
           onClick={handleVideoCallClick}
           component={Link}
-          to={`/video-call/${activeChannel.id}`}
+          to={`/video-call/${activeChannel.id}/${activeChannel.name}`}
           target='_blank'
         >
           <VideoCallIcon />
