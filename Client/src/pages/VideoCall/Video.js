@@ -51,6 +51,7 @@ export default function Video(props) {
   return (
     <div className={classes.videoContainer}>
       <video
+        controls
         className={classes.videoDimension}
         muted
         ref={videoRef}

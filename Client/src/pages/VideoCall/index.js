@@ -41,6 +41,7 @@ export default function VideoCall(props) {
   const userVideo = useRef();
   const params = useParams();
   const { userData } = useAuth();
+  const isscreenSharingMode = params?.type === 'screen';
 
   const [peers, setPeers] = useState([]);
   const peersRef = useRef([]);
@@ -56,67 +57,86 @@ export default function VideoCall(props) {
   };
 
   useEffect(() => {
-    if (socket) {
-      navigator.mediaDevices
-        .getUserMedia({
-          video: true,
-          audio: true,
-        })
-        .then((stream) => {
-          userVideo.current.srcObject = stream;
-          stream.getTracks().map((track) => (track.enabled = false));
-          socket.emit('join-video-call', params.videoRoomId);
-          socket.on('all-users', (users) => {
-            const peers = [];
-            users.forEach((user) => {
-              const peer = createPeer(user.id, userData.user.id, stream);
-              const peerObj = {
-                peerID: user.id,
-                peer,
-                fullName: user.fullName,
-                image_url: user.image_url,
-              };
-              peersRef.current.push(peerObj);
-              peers.push(peerObj);
-            });
-            setPeers(peers);
-          });
+    return () => {
+      socket.off('all-users');
+      socket.off('user-joined');
+      socket.off('receiving-returned-signal');
+      socket.off('user-left');
+    };
+  }, []);
 
-          socket.on('user-joined', (payload) => {
-            console.log('user-joined', payload);
-            const peer = addPeer(payload.signal, payload.callerID, stream);
-            const peerObj = {
-              peerID: payload.callerID,
-              peer,
-              ...payload.userInfo,
-            };
-            peersRef.current.push(peerObj);
-
-            setPeers((users) => [...users, peerObj]);
-          });
-
-          socket.on('receiving-returned-signal', (payload) => {
-            console.log('receiving-returned-signal', payload);
-            const item = peersRef.current.find((p) => p.peerID === payload.id);
-            item.peer.signal(payload.signal);
-          });
-
-          socket.on('user-left', (leavedUserId) => {
-            console.log(peersRef.current.length, 'userLeft');
-            const peersObj = peersRef.current.find(
-              (peer) => peer.peerID === leavedUserId
-            );
-            if (peersObj) {
-              peersObj.peer.destroy();
-            }
-            const updatedPeers = peersRef.current.filter(
-              (peer) => peer.peerID !== leavedUserId
-            );
-            console.log(updatedPeers, 'updatedPeers');
-            peersRef.current = updatedPeers;
-            setPeers(updatedPeers);
-          });
+  useEffect(() => {
+    const handleStream = (stream) => {
+      userVideo.current.srcObject = stream;
+      stream.getTracks().map((track) => (track.enabled = false));
+      socket.emit('join-video-call', params.videoRoomId);
+      socket.on('all-users', (users) => {
+        const peers = [];
+        users.forEach((user) => {
+          const peer = createPeer(user.id, userData.user.id, stream);
+          const peerObj = {
+            peerID: user.id,
+            peer,
+            fullName: user.fullName,
+            image_url: user.image_url,
+          };
+          peersRef.current.push(peerObj);
+          peers.push(peerObj);
         });
+        setPeers(peers);
+      });
+
+      socket.on('user-joined', (payload) => {
+        console.log('user-joined', payload);
+        const peer = addPeer(payload.signal, payload.callerID, stream);
+        const peerObj = {
+          peerID: payload.callerID,
+          peer,
+          ...payload.userInfo,
+        };
+        peersRef.current.push(peerObj);
+
+        setPeers((users) => [...users, peerObj]);
+      });
+
+      socket.on('receiving-returned-signal', (payload) => {
+        console.log('receiving-returned-signal', payload);
+        const item = peersRef.current.find((p) => p.peerID === payload.id);
+        item.peer.signal(payload.signal);
+      });
+
+      socket.on('user-left', (leavedUserId) => {
+        console.log(peersRef.current.length, 'userLeft');
+        const peersObj = peersRef.current.find(
+          (peer) => peer.peerID === leavedUserId
+        );
+        if (peersObj) {
+          peersObj.peer.destroy();
+        }
+        const updatedPeers = peersRef.current.filter(
+          (peer) => peer.peerID !== leavedUserId
+        );
+        console.log(updatedPeers, 'updatedPeers');
+        peersRef.current = updatedPeers;
+        setPeers(updatedPeers);
+      });
+    };
+    if (socket) {
+      console.log(params?.type);
+      if (isscreenSharingMode) {
+        navigator.mediaDevices
+          .getDisplayMedia({
+            cursor: true,
+          })
+          .then(handleStream);
+      } else {
+        navigator.mediaDevices
+          .getUserMedia({
+            video: true,
+            audio: true,
+          })
+          .then(handleStream);
+      }
     }
   }, [socket]);
 
@@ -183,7 +203,7 @@ export default function VideoCall(props) {
           fullName={userData?.user?.fullName || 'You'}
           image_url={userData?.user?.image_url}
         />
-        {peersRef.current.map((peer, index) => {
+        {peers.map((peer, index) => {
           return (
             <PeerVideo
               key={peer.peerID}

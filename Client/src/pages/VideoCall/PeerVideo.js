@@ -57,6 +57,7 @@ export default function PeerVideo(props) {
   return (
     <div className={classes.videoContainer}>
       <video
+        controls
         className={classes.videoDimension}
         ref={ref}
         autoPlay

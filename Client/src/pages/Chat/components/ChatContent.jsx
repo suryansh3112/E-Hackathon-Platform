@@ -7,6 +7,7 @@ import Avatar from '@mui/material/Avatar';
 import Message from './Message';
 import { TextField } from '@mui/material';
 import { Link } from 'react-router-dom';
+import PresentToAllIcon from '@mui/icons-material/PresentToAll';
 
 const useStyles = makeStyles({
   root: {
@@ -109,10 +110,23 @@ export default function ChatContent(props) {
           aria-label='edit'
           onClick={handleVideoCallClick}
           component={Link}
-          to={`/video-call/${activeChannel.id}/${activeChannel.name}`}
+          to={`/video-call/${activeChannel.id}/${activeChannel.name}/user`}
           target='_blank'
         >
           <VideoCallIcon />
+        </Fab>
+        <Fab
+          style={{ marginLeft: 10 }}
+          size='small'
+          color='secondary'
+          aria-label='edit'
+          onClick={handleVideoCallClick}
+          component={Link}
+          to={`/video-call/${activeChannel.id}/${activeChannel.name}/screen`}
+          state={{ screenSharing: true }}
+          target='_blank'
+        >
+          <PresentToAllIcon />
         </Fab>
         {newMessage?.length > 0 && (
           <Fab

@@ -48,7 +48,7 @@ export default function App() {
         <Route path='/organise-hackathon' element={<OrganiseHackathon />} />
         <Route path='/hackathons' element={<Hackathons />} />
         <Route
-          path='/video-call/:videoRoomId/:channelName'
+          path='/video-call/:videoRoomId/:channelName/:type'
           element={<VideoCall />}
         />
       </Routes>
