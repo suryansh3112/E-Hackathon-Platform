@@ -18,6 +18,7 @@ const models = {
   Hackathon: require('./hackathon.model')(sequelize, DataTypes),
   Channel: require('./channel.model')(sequelize, DataTypes),
   Message: require('./message.model')(sequelize, DataTypes),
+  Hackathon_Team: require('./Hackathon_Team.model')(sequelize, DataTypes),
 };
 
 Object.keys(models).forEach((modelName) => {

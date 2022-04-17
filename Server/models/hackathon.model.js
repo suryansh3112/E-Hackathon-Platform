@@ -53,9 +53,13 @@ module.exports = (sequelize, DataTypes) => {
 
   Hackathon.associate = (models) => {
     Hackathon.belongsToMany(models.Team, {
-      through: 'HackathonRegisteredTeam',
+      through: models.Hackathon_Team,
     });
     Hackathon.hasOne(models.Channel, { onDelete: 'CASCADE' });
+    Hackathon.belongsTo(models.User, {
+      foreignKey: 'organiserId',
+      as: 'organiser',
+    });
   };
 
   return Hackathon;

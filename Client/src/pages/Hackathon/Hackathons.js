@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@mui/styles';
 import { useAuth } from '../../contexts/AuthContext';
-import { fetchAllHackathons } from './utils';
+import { fetchAllHackathons, applyForHackathon } from './utils';
 import { Button, Typography } from '@mui/material';
 import { Card } from '../../components';
+import TextField from '@mui/material/TextField';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 const useStyles = makeStyles({
   root: {
@@ -50,6 +56,24 @@ export default function Hackathons() {
     userData: { token },
   } = useAuth();
   const [hackathonDataArray, setHackathonDataArray] = useState(null);
+  const [open, setOpen] = useState(false);
+  const [applyData, setApplyData] = useState({
+    hackathonId: '',
+    teamCode: '',
+  });
+
+  const handleClickOpen = (id) => {
+    setOpen(true);
+    setApplyData({
+      hackathonId: id,
+      teamCode: '',
+    });
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   useEffect(() => {
     const getData = async () => {
       const res = await fetchAllHackathons(token);
@@ -71,8 +95,14 @@ export default function Hackathons() {
     });
   };
 
-  const handleApplyNow = () => {
-    console.log();
+  const handleApplyNow = async () => {
+    const res = await applyForHackathon(applyData, token);
+    if (res.success) {
+      alert(res.message);
+    } else {
+      alert(res.message);
+    }
+    handleClose();
   };
   return (
     <div className={classes.root}>
@@ -87,10 +117,17 @@ export default function Hackathons() {
               hackathonStartDate,
               hackathonEndDate,
               applicationEndDate,
+              website_url,
             } = data;
             return (
               <Card width={400} key={id}>
-                <span className={classes.title}>{name}</span>
+                <a
+                  href={website_url}
+                  target='_blank'
+                  style={{ textDecoration: 'none' }}
+                >
+                  <span className={classes.title}>{name}</span>
+                </a>
                 {tagLine?.length > 0 && (
                   <span className={classes.tagLine}>#{tagLine}</span>
                 )}
@@ -107,7 +144,7 @@ export default function Hackathons() {
                   {getDate(applicationEndDate)}
                 </span>
                 <Button
-                  onClick={() => handleApplyNow(id)}
+                  onClick={() => handleClickOpen(id)}
                   size='large'
                   variant='contained'
                   sx={{ mt: 'auto' }}
@@ -121,6 +158,32 @@ export default function Hackathons() {
           <h1>No Hackathons Available</h1>
         )}
       </div>
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Apply Now</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            To apply to this hackathon, please enter your teamCode here. We will
+            send updates accordingly.
+          </DialogContentText>
+          <TextField
+            autoFocus
+            margin='dense'
+            id='name'
+            label='Team Code'
+            type='email'
+            fullWidth
+            variant='standard'
+            value={applyData.teamCode}
+            onChange={(e) =>
+              setApplyData((prev) => ({ ...prev, teamCode: e.target.value }))
+            }
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={handleApplyNow}>Submit</Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }

@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
   Team.associate = (models) => {
     Team.belongsToMany(models.User, { through: 'Teammate', as: 'members' });
     Team.belongsToMany(models.Hackathon, {
-      through: 'HackathonRegisteredTeam',
+      through: models.Hackathon_Team,
     });
     Team.belongsTo(models.User, { foreignKey: 'leaderId', as: 'leader' });
     Team.hasOne(models.Channel, { onDelete: 'CASCADE' });

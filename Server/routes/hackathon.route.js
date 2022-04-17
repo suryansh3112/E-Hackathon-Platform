@@ -8,6 +8,9 @@ router.post('/create', auth, hackathonControllers.createHackathon);
 //Gets all Hackathon
 router.get('/', auth, hackathonControllers.getAllHackathons);
 
+//Apply for a new Hackathon
+router.post('/apply', auth, hackathonControllers.applyForHackathon);
+
 // //Join Team
 // router.post("/join/:teamCode", auth, teamControllers.joinTeam);
 

@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
-    "user",
+    'user',
     {
       id: {
         type: DataTypes.UUID,
@@ -34,17 +34,21 @@ module.exports = (sequelize, DataTypes) => {
 
   User.associate = (models) => {
     User.hasOne(models.Profile);
-    User.belongsToMany(models.Team, { through: "Teammate", as: "allTeams" });
-    User.hasMany(models.Team, { foreignKey: "leaderId", as: "createdTeams" });
+    User.belongsToMany(models.Team, { through: 'Teammate', as: 'allTeams' });
+    User.hasMany(models.Team, { foreignKey: 'leaderId', as: 'createdTeams' });
     User.belongsToMany(models.Channel, {
-      through: "User_Channel",
-      as: "channels",
+      through: 'User_Channel',
+      as: 'channels',
     });
     User.belongsToMany(models.Channel, {
-      through: "Channel_Admin",
-      as: "adminChannel",
+      through: 'Channel_Admin',
+      as: 'adminChannel',
     });
     User.hasMany(models.Message);
+    User.hasMany(models.Hackathon, {
+      foreignKey: 'organiserId',
+      as: 'createdHackathons',
+    });
   };
 
   return User;
