@@ -55,8 +55,83 @@ const getAllHackathons = async (req, res) => {
     const hackathonData = await Hackathon.findAll();
     res.status(200).json({
       success: true,
-      message: 'Dackathon Data',
+      message: 'Hackathon Data',
       data: hackathonData,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+const getMyOrganizedHackathons = async (req, res) => {
+  try {
+    const hackathonData = await Hackathon.findAll({
+      where: { organiserId: req.user },
+    });
+    res.status(200).json({
+      success: true,
+      message: 'Hackathon Data',
+      data: hackathonData,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+const getMyOrganizedHackathonById = async (req, res) => {
+  try {
+    const hackathonData = await Hackathon.findOne({
+      where: { id: req.params.hackathonId },
+      include: {
+        model: models.Team,
+        attributes: ['id', 'name'],
+        include: {
+          model: models.User,
+          as: 'members',
+          attributes: ['id'],
+        },
+      },
+    });
+
+    const initialTeams = {
+      pending: [],
+      accepted: [],
+      rejected: [],
+    };
+
+    const formattedTeams = hackathonData.teams.reduce((prev, curr) => {
+      const obj = {
+        id: curr.id,
+        name: curr.name,
+        members: curr.members.length,
+        status: curr.Hackathon_Team.status,
+      };
+      switch (obj.status) {
+        case 0:
+          prev.pending.push(obj);
+          break;
+        case 1:
+          prev.accepted.push(obj);
+          break;
+        case 2:
+          prev.rejected.push(obj);
+          break;
+      }
+      return prev;
+    }, initialTeams);
+
+    const output = {
+      name: hackathonData.name,
+      id: hackathonData.id,
+      hackathonStartDate: hackathonData.hackathonStartDate,
+      hackathonEndDate: hackathonData.hackathonEndDate,
+      website_url: hackathonData.website_url,
+      teams: formattedTeams,
+    };
+    res.status(200).json({
+      success: true,
+      message: 'Hackathon Data',
+      data: output,
     });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
@@ -95,3 +170,5 @@ const applyForHackathon = async (req, res) => {
 exports.createHackathon = createHackathon;
 exports.getAllHackathons = getAllHackathons;
 exports.applyForHackathon = applyForHackathon;
+exports.getMyOrganizedHackathons = getMyOrganizedHackathons;
+exports.getMyOrganizedHackathonById = getMyOrganizedHackathonById;

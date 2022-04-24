@@ -24,7 +24,6 @@ const useStyles = makeStyles({
     backgroundColor: 'black',
   },
   header: {
-    backgroundColor: '#eee',
     backgroundColor: '#525E75',
   },
   headerText: {

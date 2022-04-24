@@ -8,6 +8,20 @@ router.post('/create', auth, hackathonControllers.createHackathon);
 //Gets all Hackathon
 router.get('/', auth, hackathonControllers.getAllHackathons);
 
+//Gets my Organised Hackathon
+router.get(
+  '/my-organised-hackathon',
+  auth,
+  hackathonControllers.getMyOrganizedHackathons
+);
+
+//Gets a HackathonInfo
+router.get(
+  '/:hackathonId',
+  auth,
+  hackathonControllers.getMyOrganizedHackathonById
+);
+
 //Apply for a new Hackathon
 router.post('/apply', auth, hackathonControllers.applyForHackathon);
 

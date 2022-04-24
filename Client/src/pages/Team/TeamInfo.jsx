@@ -141,21 +141,23 @@ export default function TeamInfo() {
           })}
         </div>
       </div>
-      <div className={classes.btnGroup}>
-        <IconButton
-          onClick={() => {
-            navigator.clipboard.writeText(teamCode);
-          }}
-          size='large'
-          color='primary'
-          sx={{ mb: 2 }}
-        >
-          <ModeEditOutlineIcon sx={{ fontSize: 30 }} />
-        </IconButton>
-        <IconButton onClick={handleClickOpen} size='large' color='error'>
-          <DeleteIcon sx={{ fontSize: 30 }} />
-        </IconButton>
-      </div>
+      {isAdmin && (
+        <div className={classes.btnGroup}>
+          <IconButton
+            onClick={() => {
+              navigator.clipboard.writeText(teamCode);
+            }}
+            size='large'
+            color='primary'
+            sx={{ mb: 2 }}
+          >
+            <ModeEditOutlineIcon sx={{ fontSize: 30 }} />
+          </IconButton>
+          <IconButton onClick={handleClickOpen} size='large' color='error'>
+            <DeleteIcon sx={{ fontSize: 30 }} />
+          </IconButton>
+        </div>
+      )}
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle id='alert-dialog-title'>
           {`Delete Team ${name}?`}

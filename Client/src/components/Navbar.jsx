@@ -24,10 +24,16 @@ const loggedInPages = [
   { name: 'Hackathons', route: '/hackathons' },
   { name: 'My Hackathons', route: '/my-hackathons' },
 ];
-const organiseHackathon = {
-  name: 'Organise Hackathon',
-  route: '/organise-hackathon',
-};
+const organiseHackathon = [
+  {
+    name: 'Organise Hackathon',
+    route: '/organise-hackathon',
+  },
+  {
+    name: 'My Organised Hackathons',
+    route: '/my-organized-hackathons',
+  },
+];
 
 const Navbar = () => {
   const {
@@ -42,6 +48,11 @@ const Navbar = () => {
   React.useEffect(() => {
     setPages(isLoggedIn ? loggedInPages : loggedOutPages);
   }, [isLoggedIn]);
+
+  const getRightMenuBar = () => {
+    if (isLoggedIn) return [...pages, ...organiseHackathon];
+    else return pages;
+  };
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -110,7 +121,7 @@ const Navbar = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {[...pages, isLoggedIn && organiseHackathon].map((page) => {
+              {getRightMenuBar().map((page) => {
                 if (!page) return null;
                 return (
                   <MenuItem
