@@ -77,6 +77,40 @@ export const fetchMyHackathons = async (token) => {
   }
 };
 
+export const rejectTeam = async (data, token) => {
+  try {
+    const res = await axios.post(
+      `${Constants.server_url}/hackathon/rejectTeam`,
+      data,
+      {
+        headers: { 'x-auth-token': token },
+      }
+    );
+    return res.data;
+  } catch (error) {
+    const message =
+      error?.response?.data?.message || Constants.strings.somethingWentWrong;
+    return { success: false, message };
+  }
+};
+
+export const acceptTeam = async (data, token) => {
+  try {
+    const res = await axios.post(
+      `${Constants.server_url}/hackathon/acceptTeam`,
+      data,
+      {
+        headers: { 'x-auth-token': token },
+      }
+    );
+    return res.data;
+  } catch (error) {
+    const message =
+      error?.response?.data?.message || Constants.strings.somethingWentWrong;
+    return { success: false, message };
+  }
+};
+
 export const fetchOrganisedHackathonById = async (hackathonId, token) => {
   try {
     const res = await axios.get(

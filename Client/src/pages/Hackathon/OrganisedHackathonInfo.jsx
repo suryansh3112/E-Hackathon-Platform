@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@mui/styles';
 import { useAuth } from '../../contexts/AuthContext';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
+
 import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
-import { Card } from '../../components';
-import { fetchOrganisedHackathonById } from './utils';
+import { fetchOrganisedHackathonById, rejectTeam, acceptTeam } from './utils';
 import { useNavigate, useParams } from 'react-router-dom';
 import TeamTab from './component/TeamTab';
 
@@ -94,34 +91,48 @@ export default function OrganisedHackathonInfo() {
   }, []);
 
   const handleAcceptTeam = async (teamId) => {
-    console.log('+', teamId, hackathonData.id);
-    setHackathonData((prev) => {
-      let obj;
-      prev.teams.pending = prev.teams.pending.filter((t) => {
-        if (t.id === teamId) {
-          obj = t;
-          return false;
-        }
-        return true;
+    const res = await acceptTeam(
+      { hackathonId: params.hackathonId, teamId },
+      userData.token
+    );
+    if (res.success) {
+      setHackathonData((prev) => {
+        let obj;
+        prev.teams.pending = prev.teams.pending.filter((t) => {
+          if (t.id === teamId) {
+            obj = t;
+            return false;
+          }
+          return true;
+        });
+        prev.teams.accepted.push(obj);
+        return { ...prev };
       });
-      prev.teams.accepted.push(obj);
-      return { ...prev };
-    });
+    } else {
+      alert(res.message);
+    }
   };
   const handleRejectTeam = async (teamId) => {
-    console.log('-', teamId, hackathonData.id);
-    setHackathonData((prev) => {
-      let obj;
-      prev.teams.pending = prev.teams.pending.filter((t) => {
-        if (t.id === teamId) {
-          obj = t;
-          return false;
-        }
-        return true;
+    const res = await rejectTeam(
+      { hackathonId: params.hackathonId, teamId },
+      userData.token
+    );
+    if (res.success) {
+      setHackathonData((prev) => {
+        let obj;
+        prev.teams.pending = prev.teams.pending.filter((t) => {
+          if (t.id === teamId) {
+            obj = t;
+            return false;
+          }
+          return true;
+        });
+        prev.teams.rejected.push(obj);
+        return { ...prev };
       });
-      prev.teams.rejected.push(obj);
-      return { ...prev };
-    });
+    } else {
+      alert(res.message);
+    }
   };
   return (
     <div className={classes.root}>

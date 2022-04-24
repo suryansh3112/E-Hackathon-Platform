@@ -1,5 +1,6 @@
 const models = require('../models');
 const Hackathon = models.Hackathon;
+const Hackathon_Team = models.Hackathon_Team;
 const Team = models.Team;
 const Channel = models.Channel;
 
@@ -167,8 +168,73 @@ const applyForHackathon = async (req, res) => {
   }
 };
 
+const rejectTeam = async (req, res) => {
+  try {
+    const { teamId, hackathonId } = req.body;
+    const hack_team = await Hackathon_Team.findOne({
+      where: { teamId: teamId, hackathonId: hackathonId },
+    });
+    if (!hack_team) {
+      return res.status(400).json({
+        success: 'false',
+        message: 'SomeThing went wrong',
+      });
+    }
+
+    await hack_team.update({ status: 2 });
+
+    res.status(200).json({
+      success: true,
+      message: 'Rejected Team Successfully',
+      data: {},
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+const acceptTeam = async (req, res) => {
+  try {
+    const { teamId, hackathonId } = req.body;
+    const hack_team = await Hackathon_Team.findOne({
+      where: { teamId: teamId, hackathonId: hackathonId },
+    });
+    const team = await Team.findOne({
+      where: { id: teamId },
+      include: {
+        model: models.User,
+        as: 'members',
+        attributes: ['id'],
+      },
+    });
+    const userIdsInTeam = team.members.map((user) => user.id);
+    const channel = await Channel.findOne({
+      where: { hackathonId: hackathonId },
+    });
+    if (!hack_team || !team || !channel) {
+      return res.status(400).json({
+        success: 'false',
+        message: 'SomeThing went wrong',
+      });
+    }
+
+    await hack_team.update({ status: 1 });
+    await channel.addParticipants(userIdsInTeam);
+
+    res.status(200).json({
+      success: true,
+      message: 'Accepted Team Successfully',
+      data: userIdsInTeam,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 exports.createHackathon = createHackathon;
 exports.getAllHackathons = getAllHackathons;
 exports.applyForHackathon = applyForHackathon;
 exports.getMyOrganizedHackathons = getMyOrganizedHackathons;
 exports.getMyOrganizedHackathonById = getMyOrganizedHackathonById;
+exports.rejectTeam = rejectTeam;
+exports.acceptTeam = acceptTeam;

@@ -22,6 +22,12 @@ router.get(
   hackathonControllers.getMyOrganizedHackathonById
 );
 
+//Accept Team
+router.post('/acceptTeam', auth, hackathonControllers.acceptTeam);
+
+//Reject Team
+router.post('/rejectTeam', auth, hackathonControllers.rejectTeam);
+
 //Apply for a new Hackathon
 router.post('/apply', auth, hackathonControllers.applyForHackathon);
 

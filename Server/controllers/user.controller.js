@@ -266,7 +266,7 @@ const getRegisteredHackathons = async (req, res) => {
           hackathonId: item.id,
           hackathonStartDate: item.hackathonStartDate,
           hackathonEndDate: item.hackathonEndDate,
-          status: item?.Hackathon_Team.status.dd || 0,
+          status: item?.Hackathon_Team.status || 0,
         };
         return formattedData;
       });

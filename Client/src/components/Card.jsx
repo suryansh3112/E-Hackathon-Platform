@@ -28,11 +28,11 @@ const useStyles = makeStyles({
 });
 
 function Card(props) {
-  const { title, children, width, centered } = props;
+  const { title, children, width, centered, onClickHandler = () => {} } = props;
   const classes = useStyles({ width, centered });
 
   return (
-    <div className={classes.flexOne}>
+    <div onClick={onClickHandler} className={classes.flexOne}>
       {title?.length > 0 && <p className={classes.title}>{title}</p>}
       <div className={classes.card}>{children}</div>
     </div>

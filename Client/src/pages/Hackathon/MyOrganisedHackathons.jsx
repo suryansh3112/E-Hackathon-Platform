@@ -92,32 +92,30 @@ export default function MyOrganisedHackathons() {
               website_url,
             } = data;
             return (
-              <div key={id} onClick={() => handleClick(id)}>
-                <Card width={400} key={id}>
-                  <a
-                    href={website_url}
-                    target='_blank'
-                    style={{ textDecoration: 'none' }}
-                  >
-                    <span className={classes.title}>{name}</span>
-                  </a>
-                  {tagLine?.length > 0 && (
-                    <span className={classes.tagLine}>#{tagLine}</span>
-                  )}
-                  <span className={classes.subTitle}>Starts</span>
-                  <span className={classes.dates}>
-                    {getDate(hackathonStartDate)}
-                  </span>
-                  <span className={classes.subTitle}>Ends</span>
-                  <span className={classes.dates}>
-                    {getDate(hackathonEndDate)}
-                  </span>
-                  <span className={classes.subTitle}>Application Closes</span>
-                  <span className={`${classes.dates} ${classes.mb_24}`}>
-                    {getDate(applicationEndDate)}
-                  </span>
-                </Card>
-              </div>
+              <Card width={400} key={id} onClickHandler={() => handleClick(id)}>
+                <a
+                  href={website_url}
+                  target='_blank'
+                  style={{ textDecoration: 'none' }}
+                >
+                  <span className={classes.title}>{name}</span>
+                </a>
+                {tagLine?.length > 0 && (
+                  <span className={classes.tagLine}>#{tagLine}</span>
+                )}
+                <span className={classes.subTitle}>Starts</span>
+                <span className={classes.dates}>
+                  {getDate(hackathonStartDate)}
+                </span>
+                <span className={classes.subTitle}>Ends</span>
+                <span className={classes.dates}>
+                  {getDate(hackathonEndDate)}
+                </span>
+                <span className={classes.subTitle}>Application Closes</span>
+                <span className={`${classes.dates} ${classes.mb_24}`}>
+                  {getDate(applicationEndDate)}
+                </span>
+              </Card>
             );
           })
         ) : (
