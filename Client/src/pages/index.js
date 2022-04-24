@@ -7,4 +7,5 @@ export { default as TeamInfo } from './Team/TeamInfo';
 export { default as Chat } from './Chat';
 export { default as OrganiseHackathon } from './Hackathon/OrganiseHackathon';
 export { default as Hackathons } from './Hackathon/Hackathons';
+export { default as RegisteredHackathons } from './Hackathon/RegisteredHackathons';
 export { default as VideoCall } from './VideoCall';

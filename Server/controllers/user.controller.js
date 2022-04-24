@@ -1,9 +1,13 @@
 const models = require('../models');
 const User = models.User;
 const Profile = models.Profile;
+const Hackathon = models.Hackathon;
+const Hackathon_Team = models.Hackathon_Team;
+const Team = models.Team;
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { Channel } = require('../models');
+const { Op } = require('sequelize');
 
 //------------------------------------------------------REGISTER------------------------------------------------------
 const register = async (req, res) => {
@@ -238,6 +242,47 @@ const getUserTeams = async (req, res) => {
   }
 };
 
+const getRegisteredHackathons = async (req, res) => {
+  try {
+    const user = await User.findByPk(req.user);
+    const teams = await user.getAllTeams();
+    const teamIds = teams.map((t) => t.id);
+    const hacks = await Team.findAll({
+      where: { id: { [Op.in]: teamIds } },
+      include: {
+        model: models.Hackathon,
+        attributes: ['id', 'name', 'hackathonStartDate', 'hackathonEndDate'],
+      },
+    });
+
+    const result = hacks.reduce((prev, curr) => {
+      const teamName = curr.name;
+      const teamId = curr.id;
+      const data = curr.hackathons.map((item) => {
+        const formattedData = {
+          teamName,
+          teamId,
+          hackathonName: item.name,
+          hackathonId: item.id,
+          hackathonStartDate: item.hackathonStartDate,
+          hackathonEndDate: item.hackathonEndDate,
+          status: item?.Hackathon_Team.status.dd || 0,
+        };
+        return formattedData;
+      });
+      return [...prev, ...data];
+    }, []);
+
+    res.status(200).json({
+      message: 'Registered Hackathons',
+      data: result,
+      success: true,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 //------------------------------------------------EXPORTS-----------------------------------------------------------
 exports.register = register;
 exports.login = login;
@@ -246,3 +291,4 @@ exports.getUserChannel = getUserChannel;
 exports.updateProfile = updateProfile;
 exports.getProfile = getProfile;
 exports.getUserTeams = getUserTeams;
+exports.getRegisteredHackathons = getRegisteredHackathons;

@@ -47,3 +47,16 @@ export const fetchAllHackathons = async (token) => {
     return { success: false, message };
   }
 };
+
+export const fetchMyHackathons = async (token) => {
+  try {
+    const res = await axios.get(`${Constants.server_url}/myHackathons/`, {
+      headers: { 'x-auth-token': token },
+    });
+    return res.data;
+  } catch (error) {
+    const message =
+      error?.response?.data?.message || Constants.strings.somethingWentWrong;
+    return { success: false, message };
+  }
+};

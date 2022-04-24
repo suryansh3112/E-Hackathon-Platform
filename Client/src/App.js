@@ -12,6 +12,7 @@ import {
   OrganiseHackathon,
   Hackathons,
   VideoCall,
+  RegisteredHackathons,
 } from './pages';
 import { SocketProvider } from './contexts/SocketContext';
 import { ChatProvider } from './contexts/ChatContext';
@@ -34,7 +35,6 @@ export default function App() {
   const { userData } = useAuth();
   const classes = useStyles();
   const location = useLocation();
-  console.log('Location', location);
 
   const AuthenticatedRoutes = () => {
     return (
@@ -47,6 +47,7 @@ export default function App() {
         <Route path='/teams/:teamId' element={<TeamInfo />} />
         <Route path='/organise-hackathon' element={<OrganiseHackathon />} />
         <Route path='/hackathons' element={<Hackathons />} />
+        <Route path='/my-hackathons' element={<RegisteredHackathons />} />
         <Route
           path='/video-call/:videoRoomId/:channelName/:type'
           element={<VideoCall />}

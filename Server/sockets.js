@@ -117,15 +117,14 @@ module.exports = (io) => {
     });
 
     socket.on('disconnect-video-call', () => {
-      console.log(socketToRoom, userId);
       const roomID = socketToRoom[userId];
       let room = videoCallUsers[roomID];
-      console.log(room);
       if (room) {
         room = room.filter((obj) => obj.id !== userId);
         videoCallUsers[roomID] = room;
+        delete socketToRoom[userId];
       }
-      console.log(room);
+      console.log('room', room, '\nsocketToRoom', socketToRoom);
       room?.forEach((currentUser) => {
         socket.broadcast.to(currentUser.id).emit('user-left', userId);
       });

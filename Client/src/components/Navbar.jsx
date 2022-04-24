@@ -22,6 +22,7 @@ const loggedInPages = [
   { name: 'Teams', route: '/teams' },
   { name: 'Chat', route: '/chat' },
   { name: 'Hackathons', route: '/hackathons' },
+  { name: 'My Hackathons', route: '/my-hackathons' },
 ];
 const organiseHackathon = {
   name: 'Organise Hackathon',
