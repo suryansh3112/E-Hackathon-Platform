@@ -93,11 +93,35 @@ export default function OrganisedHackathonInfo() {
     getData();
   }, []);
 
-  const handleAcceptTeam = (teamId) => {
+  const handleAcceptTeam = async (teamId) => {
     console.log('+', teamId, hackathonData.id);
+    setHackathonData((prev) => {
+      let obj;
+      prev.teams.pending = prev.teams.pending.filter((t) => {
+        if (t.id === teamId) {
+          obj = t;
+          return false;
+        }
+        return true;
+      });
+      prev.teams.accepted.push(obj);
+      return { ...prev };
+    });
   };
-  const handleRejectTeam = (teamId) => {
+  const handleRejectTeam = async (teamId) => {
     console.log('-', teamId, hackathonData.id);
+    setHackathonData((prev) => {
+      let obj;
+      prev.teams.pending = prev.teams.pending.filter((t) => {
+        if (t.id === teamId) {
+          obj = t;
+          return false;
+        }
+        return true;
+      });
+      prev.teams.rejected.push(obj);
+      return { ...prev };
+    });
   };
   return (
     <div className={classes.root}>

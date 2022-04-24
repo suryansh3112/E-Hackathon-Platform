@@ -92,7 +92,7 @@ export default function MyOrganisedHackathons() {
               website_url,
             } = data;
             return (
-              <div onClick={() => handleClick(id)}>
+              <div key={id} onClick={() => handleClick(id)}>
                 <Card width={400} key={id}>
                   <a
                     href={website_url}
