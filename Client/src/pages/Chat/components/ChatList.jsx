@@ -12,7 +12,6 @@ const useStyles = makeStyles({
 export default function ChatList(props) {
   const classes = useStyles();
   const { channels, setActiveChannel, activeChannel } = props;
-
   return (
     <div className={classes.root}>
       <h2>Chats</h2>
@@ -26,6 +25,7 @@ export default function ChatList(props) {
                   channelId={channel.id}
                   setActiveChannel={setActiveChannel}
                   activeChannel={activeChannel}
+                  channelType={channel.teamId ? 'Team' : 'Hackathon'}
                 />
               );
             })

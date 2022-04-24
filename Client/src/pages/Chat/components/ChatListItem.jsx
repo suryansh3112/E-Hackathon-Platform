@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@mui/styles';
-import Avatar from '@mui/material/Avatar';
+import { CustomAvatar } from '../../../components';
 
 const useStyles = makeStyles({
   root: {
@@ -27,7 +27,13 @@ const useStyles = makeStyles({
   },
 });
 export default function ChatListItem(props) {
-  const { channelName, channelId, setActiveChannel, activeChannel } = props;
+  const {
+    channelName,
+    channelId,
+    setActiveChannel,
+    activeChannel,
+    channelType,
+  } = props;
   const classes = useStyles();
 
   const setChannel = () => {
@@ -41,7 +47,7 @@ export default function ChatListItem(props) {
       }`}
       onClick={setChannel}
     >
-      <Avatar src='/broken-image.jpg' />
+      <CustomAvatar size={40} name={channelType} />
       <div>
         <p className={classes.name}>{channelName}</p>
       </div>
