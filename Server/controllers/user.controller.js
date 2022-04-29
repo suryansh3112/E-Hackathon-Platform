@@ -1,12 +1,12 @@
 const models = require('../models');
 const User = models.User;
 const Profile = models.Profile;
+const Channel = models.Channel;
 const Hackathon = models.Hackathon;
 const Hackathon_Team = models.Hackathon_Team;
 const Team = models.Team;
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { Channel } = require('../models');
 const { Op } = require('sequelize');
 
 //------------------------------------------------------REGISTER------------------------------------------------------
@@ -283,6 +283,156 @@ const getRegisteredHackathons = async (req, res) => {
   }
 };
 
+const addUserAndProfile = async (data) => {
+  const { firstName, lastName, userName, passwordHash } = data;
+  const user = await User.create({
+    userName,
+    email: `${userName}@gmail.com`,
+    password: passwordHash,
+    profileCompleted: true,
+  });
+  const profile = await Profile.create({
+    firstName,
+    lastName,
+    userId: user.id,
+  });
+  return user;
+};
+
+const addInitialTeam = async (data) => {
+  const { name, users } = data;
+  const newTeam = await Team.create({ name, leaderId: users[0] });
+  await newTeam.addMembers(users);
+  const teamChannel = await Channel.create({
+    name,
+    teamId: newTeam.id,
+  });
+  await teamChannel.addParticipants(users);
+  await teamChannel.addAdmins(users[0]);
+};
+
+const addHackathon = async (data, userId, gap) => {
+  const { name, applicationStartDate } = data;
+  const date = new Date();
+
+  const newHackathon = await Hackathon.create({
+    ...data,
+    applicationEndDate: date.setDate(applicationStartDate.getDate() + 7),
+    hackathonStartDate: date.setDate(applicationStartDate.getDate() + gap),
+    hackathonEndDate: date.setDate(applicationStartDate.getDate() + gap + 2),
+    organiserId: userId,
+  });
+  const newHackathonChannel = await Channel.create({
+    name,
+    hackathonId: newHackathon.id,
+  });
+  await newHackathonChannel.addParticipants(userId);
+  await newHackathonChannel.addAdmins(userId);
+};
+
+const hackData = [
+  {
+    name: 'Byte Synergy',
+    tagLine: 'One of a Kind',
+    minTeamSize: 2,
+    maxTeamSize: 4,
+    applicationStartDate: new Date(),
+    website_url: 'https://synergy.iiitb.ac.in/ByteSynergy/',
+  },
+  {
+    name: 'Hack Overflow',
+    tagLine: "India's biggest hackathon",
+    minTeamSize: 2,
+    maxTeamSize: 4,
+    applicationStartDate: new Date(),
+    website_url: 'https://hackathon.hackoverflow.in/',
+  },
+];
+
+const loadUsersInitialData = [
+  { userName: 'creator', firstName: 'Creator', lastName: 'Hack' },
+  { userName: 'suryansh', firstName: 'Suryansh', lastName: 'Purohit' },
+  { userName: 'rahul', firstName: 'Rahul', lastName: 'Shinde' },
+  { userName: 'sahil', firstName: 'Sahil', lastName: 'Jain' },
+  { userName: 'harsh', firstName: 'Harsh', lastName: 'Panchal' },
+  { userName: 'sanath', firstName: 'Sanath', lastName: 'Shetty' },
+  { userName: 'ganesh', firstName: 'Ganesh', lastName: 'Reddy' },
+  { userName: 'ayush', firstName: 'Ayush', lastName: 'Tomar' },
+  { userName: 'sudheer', firstName: 'Sudheer', lastName: 'Tripathi' },
+];
+
+const loadInitialData = async (req, res) => {
+  try {
+    const salt = await bcrypt.genSalt();
+    const passwordHash = await bcrypt.hash('test123', salt);
+
+    const creator = await addUserAndProfile({
+      ...loadUsersInitialData[0],
+      passwordHash,
+    });
+    const u1 = await addUserAndProfile({
+      ...loadUsersInitialData[1],
+      passwordHash,
+    });
+    const u2 = await addUserAndProfile({
+      ...loadUsersInitialData[2],
+      passwordHash,
+    });
+    const u3 = await addUserAndProfile({
+      ...loadUsersInitialData[3],
+      passwordHash,
+    });
+    const u4 = await addUserAndProfile({
+      ...loadUsersInitialData[4],
+      passwordHash,
+    });
+    const u5 = await addUserAndProfile({
+      ...loadUsersInitialData[5],
+      passwordHash,
+    });
+    const u6 = await addUserAndProfile({
+      ...loadUsersInitialData[6],
+      passwordHash,
+    });
+    const u7 = await addUserAndProfile({
+      ...loadUsersInitialData[7],
+      passwordHash,
+    });
+    const u8 = await addUserAndProfile({
+      ...loadUsersInitialData[8],
+      passwordHash,
+    });
+
+    const t1 = await addInitialTeam({
+      name: 'Hex Clan',
+      users: [u1.id, u2.id],
+    });
+    const t2 = await addInitialTeam({
+      name: 'Zip Demons',
+      users: [u3.id, u4.id],
+    });
+    const t3 = await addInitialTeam({
+      name: 'Debug Entity',
+      users: [u5.id, u6.id],
+    });
+    const t4 = await addInitialTeam({
+      name: 'Static Startup',
+      users: [u7.id, u8.id],
+    });
+
+    const h1 = await addHackathon(hackData[0], creator.id, 14);
+    const h2 = await addHackathon(hackData[1], creator.id, 20);
+
+    res.status(200).json({
+      message: 'Load Success',
+      data: '',
+      success: true,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 //------------------------------------------------EXPORTS-----------------------------------------------------------
 exports.register = register;
 exports.login = login;
@@ -292,3 +442,4 @@ exports.updateProfile = updateProfile;
 exports.getProfile = getProfile;
 exports.getUserTeams = getUserTeams;
 exports.getRegisteredHackathons = getRegisteredHackathons;
+exports.loadInitialData = loadInitialData;

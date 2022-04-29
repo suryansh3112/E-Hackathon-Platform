@@ -22,6 +22,9 @@ router.get('/profile/:userName', auth, userControllers.getProfile);
 //Gets Registered Hackathons
 router.get('/myHackathons', auth, userControllers.getRegisteredHackathons);
 
+//Load initial data
+router.get('/loadData', userControllers.loadInitialData);
+
 //Updates Profile
 router.patch('/profile', auth, userControllers.updateProfile);
 
